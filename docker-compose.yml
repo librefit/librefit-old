@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  librefit:
+    build: .
+    volumes: 
+      - .:/librefit/data
+    ports:
+      - "4000:4000"
+    networks:
+      - overlay
+
+networks:
+  overlay:

@@ -1,0 +1,1 @@
+- Getting the list of countries: https://github.com/openfoodfacts/openfoodfacts-hungergames-react/blob/6d4a4a3ebfd316fabd53888dce46e9849238dca0/update-countries.js
