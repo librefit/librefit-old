@@ -1,6 +1,6 @@
 gorm.db
 bin/
-data/
+data/*
 node_modules
 # Generated files
 .DS_Store
