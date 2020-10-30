@@ -46,44 +46,68 @@
 
       <div class="py-3" />
 
-      <v-row justify="center">
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-header>Breakfast</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-data-table
-                :headers="headers"
-                :items="desserts"
-                class="elevation-1"
-                disable-pagination
-                :hide-default-footer="true"
-              >
-                <template v-slot:item.calories="{ item }">
-                  <v-chip :color="getColor(item.calories)" dark>{{
-                    item.calories
-                  }}</v-chip>
-                </template>
-              </v-data-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header>Lunch</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              Lunch
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header>Dinner</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              Dinner
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-row>
+      <p>Breakfast</p>
+
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        class="elevation-1"
+        disable-pagination
+        :hide-default-footer="true"
+      >
+        <template v-slot:item.calories="{ item }">
+          <v-chip :color="getColor(item.calories)" dark>{{
+            item.calories
+          }}</v-chip>
+        </template>
+      </v-data-table>
+      
+      <div class="py-3" />
+      
+      <p>Snacks</p>
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        class="elevation-1"
+        disable-pagination
+        :hide-default-footer="true"
+      >
+        <template v-slot:item.calories="{ item }">
+          <v-chip :color="getColor(item.calories)" dark>{{
+            item.calories
+          }}</v-chip>
+        </template>
+      </v-data-table>
+      
+      <div class="py-3" />
+      
+      <p>Dinner</p>
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        class="elevation-1"
+        disable-pagination
+        :hide-default-footer="true"
+      >
+        <template v-slot:item.calories="{ item }">
+          <v-chip :color="getColor(item.calories)" dark>{{
+            item.calories
+          }}</v-chip>
+        </template>
+      </v-data-table>
+
       <div class="py-3" />
 
       <v-fab-transition>
-        <v-btn to='/food/inventory/add' color="pink" dark absolute bottom right fab>
+        <v-btn
+          to="/food/inventory/search"
+          color="pink"
+          dark
+          absolute
+          bottom
+          right
+          fab
+        >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-fab-transition>

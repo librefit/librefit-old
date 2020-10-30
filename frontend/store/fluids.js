@@ -64,7 +64,6 @@ export const actions = {
     var totalFluidsToday = 0
     state.fluids.forEach(function(fluid) {
       if (fluid.date == today) {
-        console.log("TRhis is today")
         totalFluidsToday += fluid.value
       }
     });
@@ -93,7 +92,7 @@ export const actions = {
     );
   },
   deleteFluid: ({ commit }, payload) => {
-    axios.delete('/fluid/' + payload.id, headers()).then(
+    axios.delete('/fluids/' + payload.id, headers()).then(
       () => {
         commit("removeFluid", payload);
       },
@@ -103,7 +102,7 @@ export const actions = {
     );
   },
   updateFluid: ({ commit }, payload) => {
-    axios.put('/fluid/' + payload.id, payload, headers()).then(
+    axios.put('/fluids' + payload.id, payload, headers()).then(
       response => {
         commit("updateFluid", response.data);
       },

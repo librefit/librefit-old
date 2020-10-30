@@ -81,9 +81,10 @@ func (s *HTTPServer) init() error {
 		v1.POST("/user/login", authMiddleware.LoginHandler)
 		v1.POST("/user/logout", authMiddleware.LogoutHandler)
 		v1.GET("/refresh_token", authMiddleware.RefreshHandler)
-
-		v1.GET("/off/search", offSearch)
 		v1.GET("/healthcheck", healthCheck)
+
+		// We don't need middleware for OpenFoodFacts search
+		v1.GET("/off/search", offSearch)
 	}
 
 	v1.Use(authMiddleware.MiddlewareFunc())
@@ -103,8 +104,14 @@ func (s *HTTPServer) init() error {
 		v1.GET("/fluids", fluids)
 		v1.POST("/fluids", fluidsWithRange)
 		v1.POST("/fluid", fluidCreate)
-		v1.DELETE("/fluid/:id", fluidDelete)
-		v1.PUT("/fluid/:id", fluidUpdate)
+		v1.DELETE("/fluids/:id", fluidDelete)
+		v1.PUT("/fluids/:id", fluidUpdate)
+
+		// Food Inventory
+		v1.GET("/food/inventories", foodInventory)
+		v1.POST("/food/inventories", fluidsWithRange)
+		v1.DELETE("/food/inventories/:id", fluidDelete)
+		v1.PUT("/food/inventories/:id", fluidUpdate)
 	}
 
 	if s.config.Opts.Debug {

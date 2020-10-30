@@ -13,9 +13,8 @@
       </v-container>
     </v-form>
 
-    <div class="py-3" />
-
     <v-list three-line>
+
       <template v-for="(item, index) in getOffSearch.products">
         <v-divider></v-divider>
 
