@@ -24,6 +24,7 @@ func Migrate() error {
 	DB.AutoMigrate(
 		&User{},
 		&FoodDiary{},
+		&FoodInventory{},
 		&Measurement{},
 		&Fluid{},
 	)
