@@ -3,7 +3,7 @@
     <base-material-card>
       <template v-slot:heading>Graph</template>
       <v-card-text>
-        <line-chart
+        <LineChart
           :chartData="getLineChartData"
           :options="getLineChartOptions"
         />
@@ -101,15 +101,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import baseMaterialCard from '@/components/MaterialCard'
-import LineChart from '@/components/charts/LineChart.vue'
 
 export default {
-  components: {
-    baseMaterialCard,
-    LineChart
-  },
-
   data: () => ({
     menuCalendar: false,
     dialog: false,

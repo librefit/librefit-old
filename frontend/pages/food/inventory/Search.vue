@@ -14,7 +14,6 @@
     </v-form>
 
     <v-list three-line>
-
       <template v-for="(item, index) in getOffSearch.products">
         <v-divider></v-divider>
 
@@ -90,7 +89,7 @@ export default {
       this.search({ search_terms: this.food, page: this.page })
     },
 
-    next (page) {
+    next(page) {
       this.page = page
       this.search({ search_terms: this.food, page: page })
     }

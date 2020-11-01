@@ -14,6 +14,7 @@ type User struct {
 	Password    string
 	IsAdmin     bool
 	Language    string
+	Country     string // Used for searching in OpenFoodFacts
 	Timezone    string
 	Theme       string
 	Extra       string

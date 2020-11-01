@@ -24,10 +24,7 @@
 </template>
 
 <script>
-import baseMaterialCard from '@/components/MaterialCard'
-
 export default {
-  components: { baseMaterialCard },
   data: () => ({
     cards: ['Today', 'Yesterday'],
     drawer: null,

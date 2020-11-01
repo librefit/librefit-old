@@ -108,10 +108,10 @@ func (s *HTTPServer) init() error {
 		v1.PUT("/fluids/:id", fluidUpdate)
 
 		// Food Inventory
-		v1.GET("/food/inventories", foodInventory)
-		v1.POST("/food/inventories", fluidsWithRange)
-		v1.DELETE("/food/inventories/:id", fluidDelete)
-		v1.PUT("/food/inventories/:id", fluidUpdate)
+		// v1.GET("/food/inventories", foodInventory)
+		// v1.POST("/food/inventories", fluidsWithRange)
+		// v1.DELETE("/food/inventories/:id", fluidDelete)
+		// v1.PUT("/food/inventories/:id", fluidUpdate)
 	}
 
 	if s.config.Opts.Debug {

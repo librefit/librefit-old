@@ -64,7 +64,7 @@
       
       <div class="py-3" />
       
-      <p>Snacks</p>
+      <p>Lunch</p>
       <v-data-table
         :headers="headers"
         :items="desserts"
@@ -82,6 +82,23 @@
       <div class="py-3" />
       
       <p>Dinner</p>
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        class="elevation-1"
+        disable-pagination
+        :hide-default-footer="true"
+      >
+        <template v-slot:item.calories="{ item }">
+          <v-chip :color="getColor(item.calories)" dark>{{
+            item.calories
+          }}</v-chip>
+        </template>
+      </v-data-table>
+
+      <div class="py-3" />
+
+      <p>Snacks</p>
       <v-data-table
         :headers="headers"
         :items="desserts"
@@ -118,10 +135,8 @@
 </template>
 
 <script>
-import baseMaterialCard from '@/components/MaterialCard'
 
 export default {
-  components: { baseMaterialCard },
   data: () => ({
     dateMenu: false,
     date: new Date().toISOString().substr(0, 10),
