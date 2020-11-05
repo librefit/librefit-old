@@ -40,6 +40,29 @@ func offSearch(c *gin.Context) {
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
 
+func offProduct(c *gin.Context) {
+	code := c.Param("code")
+
+	remote, err := url.Parse("https://world.openfoodfacts.org")
+	if err != nil {
+		panic(err)
+	}
+
+	proxy := httputil.NewSingleHostReverseProxy(remote)
+	proxy.Director = func(req *http.Request) {
+		req.Header = c.Request.Header
+		req.Host = remote.Host
+		req.URL.Scheme = remote.Scheme
+		req.URL.Host = remote.Host
+		req.URL.Path = fmt.Sprintf("/api/v0/product/%s", code)
+		req.URL.ForceQuery = true
+	}
+
+	proxy.ModifyResponse = UpdateResponse
+
+	proxy.ServeHTTP(c.Writer, c.Request)
+}
+
 func UpdateResponse(r *http.Response) error {
 	// Origin comes with Access-Control-Allow-Origin: * but my cors also have them.
 	// causing duplication. Browser doesn't like

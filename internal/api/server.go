@@ -85,6 +85,7 @@ func (s *HTTPServer) init() error {
 
 		// We don't need middleware for OpenFoodFacts search
 		v1.GET("/off/search", offSearch)
+		v1.GET("/off/product/:code", offProduct)
 	}
 
 	v1.Use(authMiddleware.MiddlewareFunc())
