@@ -32,7 +32,7 @@
             <v-spacer></v-spacer>
           </v-list-item-content>
 
-          <v-btn class="ma-2" color="info">
+          <v-btn class="ma-2" color="info" :to="'add/' + item.code">
             Add
           </v-btn>
 
@@ -80,6 +80,11 @@ export default {
 
   computed: {
     ...mapGetters('off', ['getOffSearch'])
+  },
+
+  mounted() {
+    // This is not working I don't know why
+    this.$store.commit('off/resetState')
   },
 
   methods: {
