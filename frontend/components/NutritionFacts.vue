@@ -3,108 +3,154 @@
     <section class="performance-facts">
       <header class="performance-facts__header">
         <h1 class="performance-facts__title">Nutrition Facts</h1>
-        <p>Serving Size 1/2 cup (about 82g)</p>
-        <p>Serving Per Container 8</p>
+        <p v-if="product.serving_size">Serving Size: {{ product.serving_size }} </p>
       </header>
       <table class="performance-facts__table">
-        <thead>
-          <tr>
-            <th colspan="3" class="small-info">
-              Amount Per Serving
-            </th>
-          </tr>
-        </thead>
         <tbody>
-          <tr>
-            <th colspan="2">
+          <tr v-if="product.nutriments.energy_value">
+            <th colspan="2" class="text-h5">
               <b>Calories</b>
-              {{ product.product.nutriments.energy_value }}
             </th>
+            <td class="text-h5">
+              <b
+                >{{ product.nutriments.energy_value }}
+                </b
+              >
+            </td>
           </tr>
           <tr class="thick-row">
             <td colspan="3" class="small-info">
-              <b>100ml / 100g</b>
+              <b>100 {{ unit }}</b>
             </td>
           </tr>
-          <tr>
+          <tr v-if="product.nutriments.fat_100g">
             <th colspan="2">
               <b>Total Fat</b>
             </th>
             <td>
-              <b>
-              {{ product.product.nutriments.fat }}g
-              </b>
+              <b> {{ product.nutriments.fat_100g }} {{ unit }} </b>
             </td>
           </tr>
-          <tr>
+          <tr v-if="product.nutriments['saturated-fat_100g']">
             <td class="blank-cell"></td>
             <th>
-              Saturated Fat {{ product.product.nutriments["saturated-fat"] }}g
+              Saturated Fat
             </th>
             <td>
-              <b>22%</b>
+              <b>{{ product.nutriments['saturated-fat_100g'] }} {{ unit }}</b>
             </td>
           </tr>
-          <tr>
+          <tr v-if="product.nutriments['polyunsaturated-fat_100g']">
+            <td class="blank-cell"></td>
+            <th>
+              Polyunsaturated Fat
+            </th>
+            <td>
+              <b
+                >{{ product.nutriments['polyunsaturated-fat_100g'] }}
+                {{ unit }}</b
+              >
+            </td>
+          </tr>
+          <tr v-if="product.nutriments['monounsaturated-fat_100g']">
+            <td class="blank-cell"></td>
+            <th>
+              Monounsaturated Fat
+            </th>
+            <td>
+              <b
+                >{{ product.nutriments['monounsaturated-fat_100g'] }}
+                {{ unit }}</b
+              >
+            </td>
+          </tr>
+          <tr v-if="product.nutriments['trans-fat_100g'] || product.nutriments['trans-fat_100g'] == 0">
+            <td class="blank-cell"></td>
+            <th>
+              Trans
+            </th>
+            <td>
+              <b
+                >{{ product.nutriments['trans-fat_100g'] }}
+                {{ unit }}</b
+              >
+            </td>
+          </tr>
+          <tr v-if="product.nutriments['cholesterol_100g'] || product.nutriments['cholesterol_100g'] == 0">
+            <td class="blank-cell"></td>
+            <th>
+              Cholesterol
+            </th>
+            <td>
+              <b
+                >{{ product.nutriments['cholesterol_100g'] }}
+                {{ unit }}</b
+              >
+            </td>
+          </tr>
+          <tr v-if="product.nutriments['salt_100g']">
             <th colspan="2">
-              <b>Cholesterol</b>
-              55mg
+              <b>Salt</b>
             </th>
             <td>
-              <b>18%</b>
+              <b>{{ product.nutriments['salt_100g'] }} {{ unit }} </b>
             </td>
           </tr>
-          <tr>
-            <th colspan="2">
-              <b>Sodium</b>
-              40mg
+          <tr v-if="product.nutriments['sodium_100g'] || product.nutriments['sodium_100g'] == 0">
+            <td class="blank-cell"></td>
+            <th>
+              Sodium
             </th>
             <td>
-              <b>2%</b>
+              <b
+                >{{ product.nutriments['sodium_100g'] }}
+                {{ unit }}</b
+              >
             </td>
           </tr>
-          <tr>
+          <tr v-if="product.nutriments.carbohydrates_value">
             <th colspan="2">
               <b>Total Carbohydrate</b>
-              17g
             </th>
             <td>
-              <b>6%</b>
+              <b>{{ product.nutriments.carbohydrates_value }}g</b>
             </td>
           </tr>
-          <tr>
+          <tr v-if="product.nutriments.sugars_100g || product.nutriments.sugars_100g == 0">
             <td class="blank-cell"></td>
             <th>
-              Dietary Fiber 1g
+              Sugars
             </th>
             <td>
-              <b>4%</b>
+              <b>{{ product.nutriments.sugars_100g }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.product.nutriments.sugars">
-            <td class="blank-cell"></td>
-            <th>
-              Sugars 14g
-            </th>
-            <td></td>
-          </tr>
-          <tr v-if="product.product.nutriments.proteins" class="thick-end">
+          <tr v-if="product.nutriments.proteins" class="thick-end">
             <th colspan="2">
               <b>Protein</b>
             </th>
-            <td>{{ product.product.nutriments.proteins }}g</td>
+            <td>{{ product.nutriments.proteins }} {{ unit }}</td>
           </tr>
         </tbody>
       </table>
+      <p class="text-center">
+        <a
+          :href="'https://world.openfoodfacts.org/product/' + product.code"
+          target="_blank"
+          >More details in OpenFoodFacts</a
+        >
+      </p>
     </section>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
-
 export default {
   name: 'NutritionFacts',
+
+  data: () => ({
+    unit: null
+  }),
 
   props: {
     product: {
@@ -112,6 +158,11 @@ export default {
     }
   },
 
+  computed: {
+    unitType() {
+      this.unit = 'g'
+    }
+  }
 }
 </script>
 
