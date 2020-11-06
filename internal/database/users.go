@@ -10,17 +10,18 @@ import (
 
 type User struct {
 	gorm.Model
-	Username    string
-	Password    string
-	IsAdmin     bool
-	Language    string
-	Country     string // Used for searching in OpenFoodFacts
-	Timezone    string
-	Theme       string
-	Extra       string
-	FoodDiaries []FoodDiary
-	Measurement []Measurement
-	TestAle     datatypes.JSON
+	Username      string
+	Password      string
+	IsAdmin       bool
+	Language      string
+	Country       string // Used for searching in OpenFoodFacts
+	Timezone      string
+	Theme         string
+	Extra         string
+	FoodDiaries   []FoodDiary
+	FoodInventory []FoodInventory
+	Measurement   []Measurement
+	TestAle       datatypes.JSON
 }
 
 // CreateAdmin creates the initial user if doesn't exist.

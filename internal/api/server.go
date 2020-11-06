@@ -14,9 +14,7 @@ import (
 
 func CORS() gin.HandlerFunc {
 	return cors.New(cors.Config{
-		// AllowOrigins:     []string{"http://localhost:3000"},
-		// AllowOrigins: []string{"http://localhost:3000", "https://uk.openfoodfacts.org"},
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"POST", "PATCH", "PUT", "GET", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type", ""},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -109,10 +107,16 @@ func (s *HTTPServer) init() error {
 		v1.PUT("/fluids/:id", fluidUpdate)
 
 		// Food Inventory
-		// v1.GET("/food/inventories", foodInventory)
-		// v1.POST("/food/inventories", fluidsWithRange)
-		// v1.DELETE("/food/inventories/:id", fluidDelete)
-		// v1.PUT("/food/inventories/:id", fluidUpdate)
+		v1.GET("/food/inventory", foodInventory)
+		v1.POST("/food/inventory", foodInventoryCreate)
+		v1.DELETE("/food/inventory/:id", foodInventoryDelete)
+		v1.PUT("/food/inventory/:id", foodInventoryUpdate)
+
+		// Food Diary
+		v1.GET("/food/diary", foodDiary)
+		v1.POST("/food/diary", foodDiaryCreate)
+		v1.DELETE("/food/diary/:id", foodDiaryDelete)
+		v1.PUT("/food/diary/:id", foodDiaryUpdate)
 	}
 
 	if s.config.Opts.Debug {

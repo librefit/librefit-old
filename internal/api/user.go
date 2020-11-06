@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	db "github.com/librefitness/librefitness/internal/database"
 	"github.com/librefitness/librefitness/internal/serializers"
@@ -37,13 +36,6 @@ func userPreferences(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
-
-	// err = user.AddJSON()
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	// 	return
-	// }
-	spew.Dump(user)
 
 	c.JSON(http.StatusOK, user)
 }

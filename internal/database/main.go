@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -40,5 +41,6 @@ func GetDB() *gorm.DB {
 // SaveOne insert or update an element in the database, can be anything
 func SaveOne(data interface{}) error {
 	err := DB.Save(data).Error
+	spew.Dump(err)
 	return err
 }
