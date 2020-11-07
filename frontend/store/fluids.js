@@ -102,7 +102,7 @@ export const actions = {
     );
   },
   updateFluid: ({ commit }, payload) => {
-    axios.put('/fluids' + payload.id, payload, headers()).then(
+    axios.put('/fluids/' + payload.id, payload, headers()).then(
       response => {
         commit("updateFluid", response.data);
       },
