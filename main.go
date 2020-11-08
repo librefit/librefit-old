@@ -56,7 +56,7 @@ var startCmd = &cobra.Command{
 		database.Migrate()
 
 		// Creating adminUser
-		err = database.CreateAdmin()
+		err = database.InitData()
 		if err != nil {
 			return err
 		}
