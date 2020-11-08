@@ -28,6 +28,8 @@ func Migrate() error {
 		&FoodInventory{},
 		&Measurement{},
 		&Fluid{},
+		&QuantityUnit{},
+		&MealType{},
 	)
 
 	return nil

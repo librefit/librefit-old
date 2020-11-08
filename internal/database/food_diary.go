@@ -8,10 +8,10 @@ import (
 
 type FoodDiary struct {
 	gorm.Model
-	MealType        string  // Breakfast, Lunch, Dinner, Snacks, Water
+	MealTypeID      string  // Breakfast, Lunch, Dinner, Snacks, Water
 	Quantity        float32 `gorm:"type:FLOAT"`
 	Date            time.Time
-	QuantityUnit    string
+	QuantityUnitID  uint
 	Comments        string
 	UserID          uint
 	FoodInventoryID uint

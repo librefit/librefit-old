@@ -25,7 +25,7 @@ type User struct {
 }
 
 // CreateAdmin creates the initial user if doesn't exist.
-func CreateAdmin() error {
+func createAdmin() error {
 	user := User{
 		Username: "admin",
 		IsAdmin:  true,
