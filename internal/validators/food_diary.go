@@ -13,12 +13,12 @@ import (
 
 type FoodDiaryValidator struct {
 	FoodDiary struct {
-		MealType        string `json:"meal_type" binding:"required"`
-		Quantity        string `json:"quantity" binding:"required"`
-		QuantityUnit    string `json:"quantity_unit" binding:"required"`
-		Comments        string `json:"comments"`
-		Date            string `json:"date" binding:"required"`
-		FoodInventoryID uint   `json:"food_inventory_id" binding:"required"`
+		MealTypeID     string `json:"meal_type" binding:"required"`
+		Quantity       string `json:"quantity" binding:"required"`
+		QuantityUnitID uint   `json:"quantity_unit" binding:"required"`
+		Comments       string `json:"comments"`
+		Date           string `json:"date" binding:"required"`
+		OffCode        string `json:"off_code" binding:"required"`
 	} `json:"food_diary"`
 	FoodDiaryDb db.FoodDiary `json:"-"`
 }
@@ -26,12 +26,11 @@ type FoodDiaryValidator struct {
 func NewFoodDiaryValidatorFillWith(f db.FoodDiary) FoodDiaryValidator {
 	mv := NewFoodDiaryValidator()
 
-	mv.FoodDiary.MealType = f.MealType
+	mv.FoodDiary.MealTypeID = f.MealTypeID
 	mv.FoodDiary.Quantity = fmt.Sprintf("%f", f.Quantity)
-	mv.FoodDiary.QuantityUnit = f.QuantityUnit
+	mv.FoodDiary.QuantityUnitID = f.QuantityUnitID
 	mv.FoodDiary.Comments = f.Comments
 	mv.FoodDiary.Date = fmt.Sprintf("%s", f.Date)
-	mv.FoodDiary.FoodInventoryID = f.FoodInventoryID
 
 	return mv
 }
@@ -53,12 +52,11 @@ func (self *FoodDiaryValidator) Bind(c *gin.Context) error {
 		return err
 	}
 
-	self.FoodDiaryDb.MealType = self.FoodDiary.MealType
+	self.FoodDiaryDb.MealTypeID = self.FoodDiary.MealTypeID
 	self.FoodDiaryDb.Quantity = float32(quantity)
-	self.FoodDiaryDb.QuantityUnit = self.FoodDiary.QuantityUnit
+	self.FoodDiaryDb.QuantityUnitID = self.FoodDiary.QuantityUnitID
 	self.FoodDiaryDb.Comments = self.FoodDiary.Comments
 	self.FoodDiaryDb.Date = date
-	self.FoodDiaryDb.FoodInventoryID = self.FoodDiary.FoodInventoryID
 	self.FoodDiaryDb.UserID = uint(claims["UserID"].(float64))
 
 	return nil

@@ -8,10 +8,10 @@ import (
 
 type FoodDiaryRes struct {
 	ID              uint    `json:"id"`
-	MealType        string  `json:"meal_type"`
+	MealTypeID      string  `json:"meal_type"`
 	Quantity        float32 `json:"quantity"`
 	Date            string  `json:"date"`
-	QuantityUnit    string  `json:"quantity_unit"`
+	QuantityUnitID  uint    `json:"quantity_unit"`
 	Comments        string  `json:"comments"`
 	FoodInventoryID uint    `json:"food_inventory_id"`
 }
@@ -19,9 +19,9 @@ type FoodDiaryRes struct {
 func FoodDiaryResponse(f *db.FoodDiary) FoodDiaryRes {
 	return FoodDiaryRes{
 		ID:              f.ID,
-		MealType:        f.MealType,
+		MealTypeID:      f.MealTypeID,
 		Quantity:        f.Quantity,
-		QuantityUnit:    f.QuantityUnit,
+		QuantityUnitID:  f.QuantityUnitID,
 		Date:            f.Date.Format(time.RFC3339),
 		Comments:        f.Comments,
 		FoodInventoryID: f.FoodInventoryID,

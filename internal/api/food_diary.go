@@ -5,6 +5,7 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/librefitness/librefitness/internal/database"
 	db "github.com/librefitness/librefitness/internal/database"
 	serializers "github.com/librefitness/librefitness/internal/serializers"
 	"github.com/librefitness/librefitness/internal/validators"
@@ -31,6 +32,14 @@ func foodDiaryCreate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	var fi database.FoodInventory
+	if err := db.DB.FirstOrCreate(&fi, database.FoodInventory{OffCode: fdv.FoodDiary.OffCode}).Error; err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error (db)": err.Error()})
+		return
+	}
+
+	fdv.FoodDiaryDb.FoodInventoryID = fi.ID
 
 	if err := db.SaveOne(&fdv.FoodDiaryDb); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error (db)": err.Error()})
