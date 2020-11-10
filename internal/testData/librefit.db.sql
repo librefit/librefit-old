@@ -1,6 +1,10 @@
 BEGIN TRANSACTION;
 
-INSERT INTO "fluids" ("created_at","updated_at","deleted_at","type","date","value","user_id") VALUES (datetime('now'),datetime('now'),NULL,'water',datetime('now'),251.0,1);
+INSERT INTO "fluids" ("created_at","updated_at","deleted_at","type","date","value","user_id") VALUES (datetime('now'),datetime('now'),NULL,'water',date('now') || ' ' || '09:10:00+00:00',800,1);
+INSERT INTO "fluids" ("created_at","updated_at","deleted_at","type","date","value","user_id") VALUES (datetime('now'),datetime('now'),NULL,'water',date('now') || ' ' || '12:34:00+00:00',310,1);
+INSERT INTO "fluids" ("created_at","updated_at","deleted_at","type","date","value","user_id") VALUES (datetime('now'),datetime('now'),NULL,'water',date('now') || ' ' || '13:54:00+00:00',210,1);
+INSERT INTO "fluids" ("created_at","updated_at","deleted_at","type","date","value","user_id") VALUES (datetime('now'),datetime('now'),NULL,'water',date('now') || ' ' || '16:01:00+00:00',270,1);
+INSERT INTO "fluids" ("created_at","updated_at","deleted_at","type","date","value","user_id") VALUES (datetime('now'),datetime('now'),NULL,'water',date('now') || ' ' || '20:10:00+00:00',230,1);
 
 
 

@@ -10,20 +10,16 @@ export const getters = {
   getAllFluids: state => {
     return state.allFluids;
   },
-  // getStats: state => {
-  //   var d = new Date
-  //   let bigCities = state.fluids.filter(function (e) {
-  //     return e.population > 3000000;
-  //   });
-  // },
-  // totalLiquidsToday: state => {
-  //   var d = new Date;
-  //   console.log(state)
-  //   console.log(d)
-  //   state.fluids.forEach(function(item) {
-  //     console.log(item['date'])
-  //   })
-  // },
+  getByMonth: (state) => (start, end) => {
+    var r = new Array();
+    state.stats.forEach(i => {
+      var dt = new Date(i.date);
+      if ((dt.getMonth()+1) == start.month) {
+        r.push(i)
+      }
+    });
+    return r
+  },
   // getChartOptions: state => {
   //   return {
   //     chart: {
@@ -58,17 +54,16 @@ export const actions = {
       }
     );
   },
-  statsFluids({ state }) {
-    var date = new Date;
-    var today = date.toISOString().substr(0, 10)
-    var totalFluidsToday = 0
-    state.fluids.forEach(function(fluid) {
-      if (fluid.date == today) {
-        totalFluidsToday += fluid.value
+  statsFluids({ commit }) {
+    axios.get('/stats/fluids', headers()).then(
+      response => {
+        commit("statsFluids", response.data);
+      },
+      error => {
+        commit("showMessage", { content: error, color: "red" });
+        commit("snackbar/showMessage", { content: error, color: "red" }, { root: true });
       }
-    });
-    console.log(totalFluidsToday)
-
+    );
   },
   addFluid({ commit }, payload) {
     axios.post('/fluid', payload, headers()).then(
@@ -127,6 +122,9 @@ export const mutations = {
   removeFluid: (state, payload) => {
     const index = state.allFluids.indexOf(payload);
     state.allFluids.splice(index, 1);
+  },
+  statsFluids: (state, payload) => {
+    state.stats = payload;
   },
   removeAllFluids: (state) => {
     state.allFluids = [];

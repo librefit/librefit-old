@@ -12,7 +12,7 @@ var DB *gorm.DB
 
 // Connect creates a new gorm db connection.
 func Init() (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open("./data/librefit.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("./data/librefit.db?_foreign_keys=on"), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,11 @@ func GetDB() *gorm.DB {
 
 // SaveOne insert or update an element in the database, can be anything
 func SaveOne(data interface{}) error {
-	err := DB.Save(data).Error
-	spew.Dump(err)
-	return err
+	tx := DB.Save(data)
+	if tx.Error != nil {
+		spew.Dump(tx.Error)
+		return tx.Error
+	}
+
+	return nil
 }

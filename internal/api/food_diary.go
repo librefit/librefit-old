@@ -27,6 +27,9 @@ func foodDiary(c *gin.Context) {
 }
 
 func foodDiaryCreate(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	userID := uint(claims["UserID"].(float64))
+
 	fdv := validators.NewFoodDiaryValidator()
 	if err := fdv.Bind(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,7 +37,7 @@ func foodDiaryCreate(c *gin.Context) {
 	}
 
 	var fi database.FoodInventory
-	if err := db.DB.FirstOrCreate(&fi, database.FoodInventory{OffCode: fdv.FoodDiary.OffCode}).Error; err != nil {
+	if err := db.DB.FirstOrCreate(&fi, database.FoodInventory{UserID: userID, OffCode: fdv.FoodDiary.OffCode}).Error; err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error (db)": err.Error()})
 		return
 	}

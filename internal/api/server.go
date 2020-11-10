@@ -95,9 +95,9 @@ func (s *HTTPServer) init() error {
 
 		// Measures (a.k.a weight)
 		v1.GET("/measures", measures)
-		v1.POST("/measure", measureCreate)
-		v1.DELETE("/measure/:id", measureDelete)
-		v1.PUT("/measure/:id", measureUpdate)
+		v1.POST("/measures", measureCreate)
+		v1.DELETE("/measures/:id", measureDelete)
+		v1.PUT("/measures/:id", measureUpdate)
 
 		// Fluids (a.k.a water)
 		v1.GET("/fluids", fluids)
@@ -105,6 +105,9 @@ func (s *HTTPServer) init() error {
 		v1.POST("/fluid", fluidCreate)
 		v1.DELETE("/fluids/:id", fluidDelete)
 		v1.PUT("/fluids/:id", fluidUpdate)
+
+		// Stats
+		v1.GET("/stats/fluids", statsFluids)
 
 		// Food Inventory
 		v1.GET("/food/inventory", foodInventory)

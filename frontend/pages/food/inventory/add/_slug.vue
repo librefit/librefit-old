@@ -14,41 +14,70 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" md="4">
+                    <v-select
+                      v-model="mealSelect"
+                      :items="meal"
+                      item-text="text"
+                      item-value="value"
+                      :rules="[v => !!v || 'Item is required']"
+                      label="To which meal?"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12" md="4">
+                    <v-menu
+                      v-model="menuCalendar"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="dateDiary"
+                          label="Date"
+                          prepend-icon="mdi-calendar"
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="dateDiary"
+                        @input="menuCalendar = false"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="4">
                     <v-text-field
-                      v-model="amount"
+                      v-model="quantity"
                       label="Serving"
                       required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="4">
                     <v-select
-                      v-model="unit"
-                      :items="unitList"
+                      v-model="unitSelect"
+                      :items="units"
+                      item-text="text"
+                      item-value="value"
                       :rules="[v => !!v || 'Item is required']"
                       label="Units"
                       required
                     ></v-select>
                   </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" md="4">
-                    <v-select
-                      v-model="meal"
-                      :items="mealList"
-                      :rules="[v => !!v || 'Item is required']"
-                      label="To which meal?"
-                      required
-                    ></v-select>
-                  </v-col>
                   <v-col cols="12" md="6">
-                    <p v-if="total_energy" class="text-subtitle-1 mt-3">Total calories: <b>{{ total_energy }}</b></p>
+                    <p v-if="total_energy" class="text-subtitle-1 mt-3">
+                      Total calories: <b>{{ total_energy }}</b>
+                    </p>
                   </v-col>
                 </v-row>
               </v-container>
-              <v-btn depressed color="primary">
+              <v-btn depressed color="primary" @click="save">
                 Log to diary
               </v-btn>
-              <v-btn class="ml-3">
+              <v-btn class="ml-3" @click="saveFavourite">
                 <v-icon color="pink">
                   mdi-heart
                 </v-icon>
@@ -59,6 +88,18 @@
         </v-col>
         <v-col align="center">
           <NutritionFacts v-if="product" :product="product"> </NutritionFacts>
+          <p v-if="product" class="text-subtitle-1 mt-4">
+            No the right values?
+            <a
+              :href="
+                'https://world.openfoodfacts.org/cgi/product.pl?type=edit&code=' +
+                  product.code
+              "
+              target="_blank"
+              >Edit product in Open Food Facts</a
+            >
+            (you must Sign-in)
+          </p>
         </v-col>
       </v-row>
     </v-container>
@@ -70,14 +111,28 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   data: () => ({
+    menuCalendar: false,
+    dateDiary: new Date().toISOString().substr(0, 10),
+
     product: null,
     valid: false,
-    amount: 1.0,
-    meal: '',
-    mealList: ['Breakfast', 'Lunch', 'Dinner', 'Snacks'],
-    unit: '100 gr',
-    unitList: ['100 gr', '1g', '3.5 ounce', '1 ounce'],
-    total_energy: null 
+    quantity: 1.0,
+    mealSelect: null,
+    meal: [
+      { text: 'Breakfast', value: 'B' },
+      { text: 'Lunch', value: 'L' },
+      { text: 'Dinner', value: 'D' },
+      { text: 'Snacks', value: 'S' }
+    ],
+    unitSelect: 2,
+    units: [
+      { text: 'x 100 g', value: 1 },
+      { text: 'x 1 g', value: 2 },
+      { text: 'x 3.5 ounce', value: 3 },
+      { text: 'x 1 ounce', value: 4 }
+    ],
+    total_energy: null,
+    favourite: false
   }),
 
   async asyncData({ params }) {
@@ -98,7 +153,7 @@ export default {
   beforeDestroy() {
     this.unsubscribe()
   },
-  
+
   watch: {
     amount() {
       // TODO: Transform this.amount function of unitList
@@ -108,6 +163,32 @@ export default {
 
   mounted() {
     this.$store.dispatch('off/product', this.slug)
+  },
+
+  methods: {
+    ...mapActions('food', ['add2Inventory', 'add2Diary']),
+
+    saveFavourite() {
+      const payload = {
+        off_code: this.slug,
+        favourite: this.favourite
+      }
+
+      this.add2Inventory(payload)
+    },
+
+    save() {
+
+      const payload = {
+        off_code: this.slug,
+        meal_type: this.mealSelect,
+        quantity: this.quantity,
+        quantity_unit: this.unitSelect,
+        date: this.dateDiary
+      }
+
+      this.add2Diary(payload)
+    }
   }
 }
 </script>
