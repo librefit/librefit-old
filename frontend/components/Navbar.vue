@@ -76,7 +76,9 @@
         <!-- Only the logout buttom is not in the loop -->
         <v-list-item @click="logOut()">
           <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
-          <v-list-item-content><v-list-item-title>Log Out</v-list-item-title></v-list-item-content>
+          <v-list-item-content
+            ><v-list-item-title>Log Out</v-list-item-title></v-list-item-content
+          >
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -88,68 +90,58 @@ export default {
   data() {
     return {
       drawer: false,
-      items: ["Profile", "Sign Out"],
+      items: ['Profile', 'Sign Out'],
       genericMenu: [
-        { icon: "mdi-view-dashboard", text: "Home", route: "/" },
+        { icon: 'mdi-view-dashboard', text: 'Home', route: '/' },
         {
-          icon: "mdi-book-open-variant",
-          text: "Plan",
-          route: "/plan"
-        },
-        {
-          icon: "mdi-silverware",
-          text: "Food",
-          route: "/food",
+          icon: 'mdi-silverware',
+          text: 'Food',
+          route: '/food',
           submenu: [
             {
-              icon: "mdi-calendar-today",
-              text: "Meal Diary",
-              route: "/food/diary"
+              icon: 'mdi-calendar-today',
+              text: 'Meal Diary',
+              route: '/food/diary'
             },
             {
-              icon: "mdi-cup-water",
-              text: "Water Intake",
-              route: "/food/fluids"
+              icon: 'mdi-cup-water',
+              text: 'Water Intake',
+              route: '/food/fluids'
             },
             {
-              icon: "mdi-notebook",
-              text: "Recipes",
-              route: "/food/recipes"
-            },
-            {
-              icon: "mdi-archive",
-              text: "Inventory",
-              route: "/food/inventory"
+              icon: 'mdi-archive',
+              text: 'Inventory',
+              route: '/food/inventory'
             }
           ]
         },
         {
-          icon: "mdi-weight-kilogram",
-          text: "Weight Tracking",
-          route: "/measures"
+          icon: 'mdi-weight-kilogram',
+          text: 'Weight Tracking',
+          route: '/measures'
         },
         {
-          icon: "mdi-run-fast",
-          text: "Activities (soon!)",
-          route: "/comingsoon"
+          icon: 'mdi-calendar',
+          text: 'Calendar',
+          route: '/calendar'
         },
         {
-          icon: "mdi-calendar",
-          text: "Calendar",
-          route: "/calendar"
+          icon: 'mdi-run-fast',
+          text: 'Activities (soon!)',
+          route: '/comingsoon'
         },
         { divider: true },
-        { icon: "mdi-cog-outline", text: "Settings", route: "/user/settings" },
+        { icon: 'mdi-cog-outline', text: 'Settings', route: '/user/settings' }
       ]
-    };
+    }
   },
   methods: {
     logOut() {
-      this.$auth.logout();
-      this.$router.push("/login");
+      this.$auth.logout()
+      this.$router.push('/login')
     }
   }
-};
+}
 </script>
 
 <style></style>
