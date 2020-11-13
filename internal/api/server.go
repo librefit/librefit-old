@@ -117,6 +117,7 @@ func (s *HTTPServer) init() error {
 
 		// Food Diary
 		v1.GET("/food/diary", foodDiary)
+		v1.GET("/food/diary/:id", foodDiaryID)
 		v1.POST("/food/diary", foodDiaryCreate)
 		v1.DELETE("/food/diary/:id", foodDiaryDelete)
 		v1.PUT("/food/diary/:id", foodDiaryUpdate)

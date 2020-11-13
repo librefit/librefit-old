@@ -15,11 +15,12 @@ type FoodDiary struct {
 	Comments        string
 	UserID          uint
 	FoodInventoryID uint
+	FoodInventory   FoodInventory
 }
 
 func FindOneFoodDiary(id string) (FoodDiary, error) {
 	var f FoodDiary
-	err := DB.Find(&f, id).Error
+	err := DB.Preload("FoodInventory").Find(&f, id).Error
 	return f, err
 }
 
@@ -31,8 +32,8 @@ func DeleteFoodDiary(id string) error {
 	return DB.Unscoped().Delete(f).Error
 }
 
-func FindManyFoodDiary(UserID uint) ([]FoodDiary, error) {
+func FindManyFoodDiary(UserID uint, start time.Time, end time.Time) ([]FoodDiary, error) {
 	var f []FoodDiary
-	err := DB.Find(&f, "user_id = ?", UserID).Error
+	err := DB.Preload("FoodInventory").Where("date BETWEEN ? AND ?", start, end).Find(&f, "user_id = ?", UserID).Error
 	return f, err
 }
