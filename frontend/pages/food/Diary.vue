@@ -1,12 +1,11 @@
 <template>
   <div>
-    <base-material-card color="green" class="px-5 py-3">
-      <template v-slot:heading>
-        <div class="display-1 font-weight-light">
-          Food Diary
-        </div>
-      </template>
-      <v-card-text>
+    <p class="text-center text-h4">
+      Food Diary
+    </p>
+
+    <v-card class="mt-4 mb-4">
+      <v-card-text class="text-center">
         <v-menu
           ref="menu"
           v-model="dateMenu"
@@ -43,99 +42,98 @@
           </v-date-picker>
         </v-menu>
       </v-card-text>
+    </v-card>
 
-      <div class="py-3" />
+    <v-card>
+      <v-card-text>
+        <p>Breakfast</p>
 
-      <p>Breakfast</p>
-
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        class="elevation-1"
-        disable-pagination
-        :hide-default-footer="true"
-      >
-        <template v-slot:item.calories="{ item }">
-          <v-chip :color="getColor(item.calories)" dark>{{
-            item.calories
-          }}</v-chip>
-        </template>
-      </v-data-table>
-      
-      <div class="py-3" />
-      
-      <p>Lunch</p>
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        class="elevation-1"
-        disable-pagination
-        :hide-default-footer="true"
-      >
-        <template v-slot:item.calories="{ item }">
-          <v-chip :color="getColor(item.calories)" dark>{{
-            item.calories
-          }}</v-chip>
-        </template>
-      </v-data-table>
-      
-      <div class="py-3" />
-      
-      <p>Dinner</p>
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        class="elevation-1"
-        disable-pagination
-        :hide-default-footer="true"
-      >
-        <template v-slot:item.calories="{ item }">
-          <v-chip :color="getColor(item.calories)" dark>{{
-            item.calories
-          }}</v-chip>
-        </template>
-      </v-data-table>
-
-      <div class="py-3" />
-
-      <p>Snacks</p>
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        class="elevation-1"
-        disable-pagination
-        :hide-default-footer="true"
-      >
-        <template v-slot:item.calories="{ item }">
-          <v-chip :color="getColor(item.calories)" dark>{{
-            item.calories
-          }}</v-chip>
-        </template>
-      </v-data-table>
-
-      <div class="py-3" />
-
-      <v-fab-transition>
-        <v-btn
-          to="/food/inventory/search"
-          color="pink"
-          dark
-          absolute
-          bottom
-          right
-          fab
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          class="elevation-1"
+          disable-pagination
+          :hide-default-footer="true"
         >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-fab-transition>
-    </base-material-card>
+          <template v-slot:item.calories="{ item }">
+            <v-chip :color="getColor(item.calories)" dark>{{
+              item.calories
+            }}</v-chip>
+          </template>
+        </v-data-table>
 
-    <div class="py-6" />
+        <div class="py-3" />
+
+        <p>Lunch</p>
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          class="elevation-1"
+          disable-pagination
+          :hide-default-footer="true"
+        >
+          <template v-slot:item.calories="{ item }">
+            <v-chip :color="getColor(item.calories)" dark>{{
+              item.calories
+            }}</v-chip>
+          </template>
+        </v-data-table>
+
+        <div class="py-3" />
+
+        <p>Dinner</p>
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          class="elevation-1"
+          disable-pagination
+          :hide-default-footer="true"
+        >
+          <template v-slot:item.calories="{ item }">
+            <v-chip :color="getColor(item.calories)" dark>{{
+              item.calories
+            }}</v-chip>
+          </template>
+        </v-data-table>
+
+        <div class="py-3" />
+
+        <p>Snacks</p>
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          class="elevation-1"
+          disable-pagination
+          :hide-default-footer="true"
+        >
+          <template v-slot:item.calories="{ item }">
+            <v-chip :color="getColor(item.calories)" dark>{{
+              item.calories
+            }}</v-chip>
+          </template>
+        </v-data-table>
+
+        <div class="py-3" />
+
+        <v-fab-transition>
+          <v-btn
+            to="/food/inventory/search"
+            color="pink"
+            dark
+            absolute
+            bottom
+            right
+            fab
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-fab-transition>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
 <script>
-
 export default {
   data: () => ({
     dateMenu: false,
@@ -147,11 +145,12 @@ export default {
         sortable: false,
         value: 'name'
       },
-      { text: 'Calories', value: 'calories' },
-      { text: 'Fat (g)', value: 'fat' },
+      { text: 'Calories (kcal)', value: 'calories' },
       { text: 'Carbs (g)', value: 'carbs' },
+      { text: 'Fat (g)', value: 'fat' },
       { text: 'Protein (g)', value: 'protein' },
-      { text: 'Iron (%)', value: 'iron' }
+      { text: 'Sodium (g)', value: 'sodium' },
+      { text: 'Sugar', value: 'sugar' }
     ],
     desserts: [
       {
@@ -160,7 +159,8 @@ export default {
         fat: 6.0,
         carbs: 24,
         protein: 4.0,
-        iron: '1%'
+        sodium: '12',
+        sugar: '2'
       },
       {
         name: 'Ice cream sandwich',
@@ -168,7 +168,8 @@ export default {
         fat: 9.0,
         carbs: 37,
         protein: 4.3,
-        iron: '1%'
+        sodium: '12',
+        sugar: '2'
       },
       {
         name: 'KitKat',
@@ -176,7 +177,8 @@ export default {
         fat: 26.0,
         carbs: 65,
         protein: 7,
-        iron: '6%'
+        sodium: '12',
+        sugar: '2'
       }
     ]
   }),

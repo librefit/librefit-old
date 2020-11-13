@@ -1,5 +1,11 @@
 <template>
   <div>
+    <p class="text-center mb-4 text-h4">
+      Weight tracking
+    </p>
+    
+    <div class="py-4" />
+
     <base-material-card>
       <template v-slot:heading>Graph</template>
       <v-card-text>
@@ -25,14 +31,7 @@
           <v-toolbar flat color="white">
             <v-dialog v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  dark
-                  class="mb-2"
-                  v-bind="attrs"
-                  v-on="on"
-                  >Register</v-btn
-                >
+                <v-btn class="mb-2" v-bind="attrs" v-on="on">Register</v-btn>
               </template>
               <v-card>
                 <v-card-title>

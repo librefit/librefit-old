@@ -1,12 +1,12 @@
 <template>
   <div>
-    <p class="text-center text-h5">
+    <p class="text-center text-h4">
       Your Personal Dashboard
     </p>
 
     <div>
       <v-card>
-        <v-card-text>
+        <v-card-text class="text-center">
           <v-menu
             ref="menu"
             v-model="dateMenu"
@@ -48,25 +48,27 @@
       </v-card>
     </div>
 
-      <div class="py-3" />
+    <div class="py-3" />
 
     <v-container class="grey lighten-5">
       <v-row>
         <v-col cols="6" md="4">
           <base-material-stats-card
+            v-if="totalLiquids"
             color="primary"
             icon="mdi-water"
             title="Total Liquids"
-            value="1800 ml"
+            :value="totalLiquids"
             class="ma-3"
           />
         </v-col>
         <v-col cols="6" md="4">
           <base-material-stats-card
+            v-if="lastMeasure"
             color="primary"
             icon="mdi-weight"
             title="Last registered weight"
-            value="85 kg"
+            :value="lastMeasure"
             class="ma-3"
           />
         </v-col>
@@ -96,7 +98,7 @@
           </v-card>
         </v-col>
       </v-row>
-      
+
       <div class="py-3" />
 
       <v-row>
@@ -111,10 +113,11 @@
         </v-col>
         <v-col cols="6" md="4">
           <base-material-stats-card
+            v-if="lastMeasure"
             color="primary"
             icon="mdi-weight"
             title="Last registered weight"
-            value="85 kg"
+            :value="lastMeasure"
             class="ma-3"
           />
         </v-col>
@@ -156,13 +159,27 @@ export default {
     date: new Date().toISOString().substr(0, 10),
     value: [423, 446, 675, 510, 590, 610, 760]
   }),
-  
+
+  computed: {
+    totalLiquids() {
+      return this.$store.getters['fluids/totalByDay'](this.date)
+    },
+    lastMeasure() {
+      return this.$store.getters['measures/lastMeasureByDay'](this.date)
+    }
+  },
+
+  mounted() {
+    this.$store.dispatch('fluids/statsFluids')
+    this.$store.dispatch('measures/loadMeasures')
+  },
+
   methods: {
     moveDate(direction) {
       var d = new Date(this.date)
       d.setDate(d.getDate() - direction)
       this.date = d.toISOString().substr(0, 10)
-    },
+    }
   }
 }
 </script>
