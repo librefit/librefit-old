@@ -14,7 +14,7 @@ export const getters = {
     var r = new Array()
     state.stats.forEach(i => {
       var dt = new Date(i.date)
-      if (dt.getMonth() + 1 == start.month) {
+      if (dt.getMonth() == start.getMonth()) {
         r.push(i)
       }
     })
