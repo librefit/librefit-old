@@ -7,6 +7,7 @@ import (
 type FoodInventoryRes struct {
 	ID                 uint    `json:"id"`
 	OffCode            string  `json:"off_code"`
+	ProductName        string  `json:"product_name"`
 	Favourite          bool    `json:"favourite"`
 	Calories           float64 `json:"calories"`
 	FatTotal           float64 `json:"fat_total"`

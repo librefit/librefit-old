@@ -29,6 +29,7 @@ func FoodDiaryResponse(f *db.FoodDiary) FoodDiaryRes {
 		FoodInventory: FoodInventoryRes{
 			ID:                 f.FoodInventory.ID,
 			OffCode:            f.FoodInventory.OffCode,
+			ProductName:        f.FoodInventory.ProductName,
 			Favourite:          f.FoodInventory.Favourite,
 			Calories:           f.FoodInventory.Calories,
 			FatTotal:           f.FoodInventory.FatTotal,

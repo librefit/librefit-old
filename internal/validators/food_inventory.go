@@ -10,6 +10,7 @@ import (
 type FoodInventoryValidator struct {
 	FoodInventory struct {
 		OffCode            string  `json:"off_code" binding:"required"`
+		ProductName        string  `json:"product_name"`
 		Favourite          bool    `json:"favourite"`
 		Calories           float64 `json:"calories"`
 		FatTotal           float64 `json:"FatTotal"`
@@ -32,6 +33,7 @@ func NewFoodInventoryValidatorFillWith(f db.FoodInventory) FoodInventoryValidato
 	mv := NewFoodInventoryValidator()
 
 	mv.FoodInventory.OffCode = f.OffCode
+	mv.FoodInventory.ProductName = f.ProductName
 	mv.FoodInventory.Favourite = f.Favourite
 	mv.FoodInventory.Calories = f.Calories
 	mv.FoodInventory.FatTotal = f.FatTotal
@@ -58,6 +60,7 @@ func (self *FoodInventoryValidator) Bind(c *gin.Context) error {
 	}
 
 	self.FoodInventoryDb.OffCode = self.FoodInventory.OffCode
+	self.FoodInventoryDb.ProductName = self.FoodInventory.ProductName
 	self.FoodInventoryDb.Favourite = self.FoodInventory.Favourite
 	self.FoodInventoryDb.UserID = uint(claims["UserID"].(float64))
 	self.FoodInventoryDb.Calories = self.FoodInventory.Calories

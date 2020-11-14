@@ -7,10 +7,11 @@ import (
 
 type FoodInventory struct {
 	gorm.Model
-	OffCode   string
-	Favourite bool
-	UserID    uint
-	FoodDiary []FoodDiary
+	OffCode     string
+	ProductName string
+	Favourite   bool
+	UserID      uint
+	FoodDiary   []FoodDiary
 	// Important values to save so we're not always querying OFF
 	Calories           float64
 	FatTotal           float64
@@ -60,6 +61,7 @@ func FindOrCreateFoodInventory(u uint, o string) (*FoodInventory, error) {
 		return nil, err
 	}
 
+	r.ProductName = product.ProductName
 	r.Calories = product.Nutriments.EnergyKcal100G
 	r.FatTotal = product.Nutriments.Fat100G
 	r.FatSaturated = product.Nutriments.SaturatedFat100G
