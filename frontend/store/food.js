@@ -3,7 +3,8 @@ import headers from '~/plugins/headers'
 
 export const state = () => ({
   inventory: [],
-  diary: []
+  diary: [],
+  diaryDate: []
 })
 
 export const getters = {
@@ -12,6 +13,9 @@ export const getters = {
   },
   getAllInventory: state => {
     return state.inventory
+  },
+  getFoodDiary: state => {
+    return state.diaryDate
   }
 }
 
@@ -43,6 +47,25 @@ export const actions = {
         )
       }
     )
+  },
+  foodDiary({ commit }, payload) {
+    axios
+      .get('/food/diary', {
+        params: { start: payload.start, end: payload.end },
+        headers: { Authorization: localStorage.getItem('auth._token.local') }
+      })
+      .then(
+        response => {
+          commit('diaryByDate', response.data)
+        },
+        error => {
+          commit(
+            'snackbar/showMessage',
+            { content: error, color: 'red' },
+            { root: true }
+          )
+        }
+      )
   }
 }
 
@@ -52,5 +75,13 @@ export const mutations = {
   },
   append2Diary: (state, payload) => {
     state.diary.push(payload)
+  },
+  diaryByDate: (state, payload) => {
+    // If it doesn't get any payload it means not FoodDiary entry for this date
+    if (payload === undefined || payload.length == 0) {
+      state["diaryDate"] = []
+    } else {
+      state.diaryDate = payload
+    }
   }
 }
