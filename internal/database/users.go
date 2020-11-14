@@ -10,13 +10,22 @@ import (
 
 type User struct {
 	gorm.Model
-	Username      string
-	Password      string
-	IsAdmin       bool
-	Language      string
-	Country       string // Used for searching in OpenFoodFacts
-	Timezone      string
-	Theme         string
+	Username       string
+	Password       string
+	IsAdmin        bool
+	Language       string
+	Country        string // Used for searching in OpenFoodFacts
+	Timezone       string
+	Theme          string
+	FullName       string
+	Email          string
+	Birthday       string
+	PreferredUnits string
+	Sex            string
+	Height         float32
+	BodyFat        string
+	ActivityLevel  string
+
 	Extra         string
 	FoodDiaries   []FoodDiary
 	FoodInventory []FoodInventory
