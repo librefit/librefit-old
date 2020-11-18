@@ -4,33 +4,19 @@ import (
 	"errors"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	Username       string
-	Password       string
-	IsAdmin        bool
-	Language       string
-	Country        string // Used for searching in OpenFoodFacts
-	Timezone       string
-	Theme          string
-	FullName       string
-	Email          string
-	Birthday       string
-	PreferredUnits string
-	Sex            string
-	Height         float32
-	BodyFat        string
-	ActivityLevel  string
-
-	Extra         string
+	Username      string
+	Password      string
+	IsAdmin       bool
+	UserSettingID uint
+	UserSetting   UserSetting
 	FoodDiaries   []FoodDiary
 	FoodInventory []FoodInventory
 	Measurement   []Measurement
-	TestAle       datatypes.JSON
 }
 
 // CreateAdmin creates the initial user if doesn't exist.
@@ -38,7 +24,10 @@ func createAdmin() error {
 	user := User{
 		Username: "admin",
 		IsAdmin:  true,
-		Language: "en",
+		UserSetting: UserSetting{
+			Language:  "en",
+			UseMetric: true,
+		},
 	}
 
 	err := user.setPassword("123456")
@@ -67,7 +56,7 @@ func (u *User) setPassword(password string) error {
 // FindOneUser search in the users table for a user.
 func FindOneUser(condition interface{}) (User, error) {
 	var u User
-	err := DB.Where(condition).First(&u).Error
+	err := DB.Preload("UserSetting").Where(condition).First(&u).Error
 	return u, err
 }
 
@@ -75,12 +64,4 @@ func (u *User) CheckPassword(password string) error {
 	bytePassword := []byte(password)
 	byteHashedPassword := []byte(u.Password)
 	return bcrypt.CompareHashAndPassword(byteHashedPassword, bytePassword)
-}
-
-func (u *User) AddJSON() error {
-	u.TestAle = datatypes.JSON([]byte(`{"name": "jinzhu", "age": 18, "tags": ["tag1", "tag2"], "orgs": {"orga": "orgaaaaa"}}`))
-
-	DB.Save(&u)
-
-	return nil
 }

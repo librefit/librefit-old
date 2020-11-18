@@ -49,11 +49,5 @@ func userPreferencesUpdate(c *gin.Context) {
 		return
 	}
 
-	err = user.AddJSON()
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
 	c.JSON(http.StatusOK, user)
 }
