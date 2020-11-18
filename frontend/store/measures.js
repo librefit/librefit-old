@@ -19,24 +19,28 @@ export const getters = {
     })
     return r
   },
-  lastMeasureByDay: state => day => {
+  lastMeasureTaken: state => day => {
     var m = new Array()
     var d = new Date(day)
 
-    state.allMeasures.forEach(i => {
-      var dt = new Date(i.date)
-      if (dt.getTime() <= d.getTime()) {
-        m.push(i)
-      }
-    })
-
-    var r = m.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
-    if (!r) {
-      r = 'N/A'
+    if (state.allMeasures?.length) {
+      state.allMeasures.forEach(i => {
+        var dt = new Date(i.date)
+        if (dt.getTime() <= d.getTime()) {
+          m.push(i)
+        }
+      })
     }
 
-    // It won't always be kgs, this has to change
-    return r.value + ' kg'
+    var r = m.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )[0]
+    if (!r) {
+      return 'N/A'
+    } else {
+      // It won't always be kgs, this has to change
+      return r.value + 'kg'
+    }
   },
   getLineChartOptions: () => {
     return {
@@ -123,10 +127,18 @@ export const actions = {
 
 export const mutations = {
   initMeasures: (state, payload) => {
-    state.allMeasures = payload
+    payload.sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date)
+    })
+    state.allMeasures = payload.reverse()
   },
   appendMeasure: (state, payload) => {
-    state.allMeasures.push(payload)
+    const m = state.allMeasures
+    m.push(payload)
+    m.sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date)
+    })
+    state.allMeasures = m.reverse()
   },
   updateMeasure: (state, payload) => {
     const index = state.allMeasures.findIndex(x => x.id == payload.id)

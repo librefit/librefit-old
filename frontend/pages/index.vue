@@ -54,54 +54,22 @@
       <v-row>
         <v-col cols="6" md="4">
           <base-material-stats-card
-            v-if="totalLiquids"
             color="primary"
             icon="mdi-water"
             title="Total Liquids"
-            :value="totalLiquids"
+            :value="totalLiquids || 'N/A'"
             class="ma-3"
           />
         </v-col>
         <v-col cols="6" md="4">
           <base-material-stats-card
-            v-if="lastMeasure"
             color="primary"
-            icon="mdi-weight"
+            icon="mdi-scale-bathroom"
             title="Last registered weight"
-            :value="lastMeasure"
+            :value="lastMeasure || 'N/A'"
             class="ma-3"
           />
         </v-col>
-        <v-col cols="6" md="4">
-          <v-card class="mx-auto" max-width="450">
-            <v-card-title>
-              <v-icon large left>
-                mdi-fire
-              </v-icon>
-              <span class="title font-weight-light">Total Calories</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-sheet>
-                <v-sparkline
-                  :value="value"
-                  color="black"
-                  height="100"
-                  padding="24"
-                  stroke-linecap="round"
-                  smooth
-                >
-                  <template v-slot:label="item"> ${{ item.value }} </template>
-                </v-sparkline>
-              </v-sheet>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <div class="py-3" />
-
-      <v-row>
         <v-col cols="6" md="4">
           <base-material-stats-card
             color="primary"
@@ -111,13 +79,26 @@
             class="ma-3"
           />
         </v-col>
+      </v-row>
+
+      <div class="py-3" />
+
+      <v-row>
         <v-col cols="6" md="4">
           <base-material-stats-card
-            v-if="lastMeasure"
             color="primary"
-            icon="mdi-weight"
-            title="Last registered weight"
-            :value="lastMeasure"
+            icon="mdi-calculator"
+            title="BMI"
+            value="12000"
+            class="ma-3"
+          />
+        </v-col>
+        <v-col cols="6" md="4">
+          <base-material-stats-card
+            color="primary"
+            icon="mdi-silverware-fork-knife"
+            title="Total Calories"
+            :value="totalCalories || 'N/A'"
             class="ma-3"
           />
         </v-col>
@@ -125,24 +106,36 @@
           <v-card class="mx-auto" max-width="450">
             <v-card-title>
               <v-icon large left>
-                mdi-fire
+                mdi-chart-pie
+                <v-card class="mx-auto" max-width="450">
+                  <v-card-title>
+                    <v-icon large left>
+                      mdi-chart-pie
+                    </v-icon>
+                    <span class="title font-weight-light"
+                      >Nutrients Distribution</span
+                    >
+                  </v-card-title>
+
+                  <v-card-text>
+                    <PieChart
+                      :chartData="getPieChartData"
+                      :options="getPieChartOptions"
+                    />
+                  </v-card-text>
+                </v-card>
               </v-icon>
-              <span class="title font-weight-light">Total Calories</span>
+              <span class="title font-weight-light"
+                >Nutrients Distribution</span
+              >
             </v-card-title>
 
             <v-card-text>
-              <v-sheet>
-                <v-sparkline
-                  :value="value"
-                  color="black"
-                  height="100"
-                  padding="24"
-                  stroke-linecap="round"
-                  smooth
-                >
-                  <template v-slot:label="item"> ${{ item.value }} </template>
-                </v-sparkline>
-              </v-sheet>
+              <PieChart
+                v-if="getPieChartData"
+                :chartData="getPieChartData"
+                :options="getPieChartOptions"
+              />
             </v-card-text>
           </v-card>
         </v-col>
@@ -152,12 +145,18 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   middleware: 'auth',
   data: () => ({
     dateMenu: false,
     date: new Date().toISOString().substr(0, 10),
-    value: [423, 446, 675, 510, 590, 610, 760]
+    value: [423, 446, 675, 510, 590, 610, 760],
+    getPieChartOptions: {
+      responsive: true,
+      maintainAspectRatio: false
+    },
   }),
 
   computed: {
@@ -165,21 +164,40 @@ export default {
       return this.$store.getters['fluids/totalByDay'](this.date)
     },
     lastMeasure() {
-      return this.$store.getters['measures/lastMeasureByDay'](this.date)
+      return this.$store.getters['measures/lastMeasureTaken'](this.date)
+    },
+    statsFoodDiary() {
+      return this.$store.getters['food/getStats'](this.date)
+    },
+    getPieChartData() {
+      return this.$store.getters['food/getPieChartDataSet'](this.date)
+    },
+    totalCalories() {
+      var d = this.statsFoodDiary
+      if (d != 'N/A') {
+        return d.calories.toString()
+      }
     }
   },
 
   mounted() {
     this.$store.dispatch('fluids/statsFluids')
     this.$store.dispatch('measures/loadMeasures')
+    this.$store.dispatch('food/foodStats', { start: this.date, end: this.date })
   },
 
   methods: {
+    ...mapActions('food', ['foodStats']),
+
     moveDate(direction) {
       var d = new Date(this.date)
       d.setDate(d.getDate() - direction)
       this.date = d.toISOString().substr(0, 10)
+      this.foodStats({ start: this.date, end: this.date })
     }
   }
 }
+
+
+
 </script>

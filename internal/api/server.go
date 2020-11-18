@@ -90,7 +90,6 @@ func (s *HTTPServer) init() error {
 	{
 		// User
 		v1.GET("/user/info", userInfo)
-		v1.GET("/user/preferences", userPreferences)
 		v1.PUT("/user/preferences", userPreferencesUpdate)
 
 		// Measures (a.k.a weight)
@@ -108,6 +107,7 @@ func (s *HTTPServer) init() error {
 
 		// Stats
 		v1.GET("/stats/fluids", statsFluids)
+		v1.GET("/stats/food_diary", statsFoodDiary)
 
 		// Food Inventory
 		v1.GET("/food/inventory", foodInventory)

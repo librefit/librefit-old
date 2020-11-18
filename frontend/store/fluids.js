@@ -12,29 +12,35 @@ export const getters = {
   },
   getByMonth: state => (start, end) => {
     var r = new Array()
-    state.stats.forEach(i => {
-      var dt = new Date(i.date)
-      if (dt.getMonth() == start.getMonth()) {
-        r.push(i)
-      }
-    })
+
+    if (state.stats?.length) {
+      state.stats.forEach(i => {
+        var dt = new Date(i.date)
+        if (dt.getMonth() == start.getMonth()) {
+          r.push(i)
+        }
+      })
+    }
     return r
   },
   totalByDay: state => day => {
     var r
     var d = new Date(day)
-    state.stats.forEach(i => {
-      var dt = new Date(i.date)
-      if (dt.getTime() === d.getTime()) {
-        r = i.value.toString()
-      }
-    })
 
-    if (!r) {
-      r = 'N/A'
+    if (state.stats?.length) {
+      state.stats.forEach(i => {
+        var dt = new Date(i.date)
+        if (dt.getTime() === d.getTime()) {
+          r = i.value.toString()
+        }
+      })
     }
 
-    return r
+    if (!r) {
+      return 'N/A'
+    }
+
+    return r + 'ml'
   }
   // getChartOptions: state => {
   //   return {
