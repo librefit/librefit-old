@@ -7,16 +7,25 @@
       >
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
-      <v-menu rounded="b-xl" offset-y>
+
+      <v-menu offset-y>
         <template v-slot:activator="{ attrs, on }">
-          <v-btn icon to="/login" v-bind="attrs" v-on="on">
-            <v-icon>mdi-account</v-icon>
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-avatar>
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            </v-avatar>
           </v-btn>
         </template>
 
         <v-list>
-          <v-list-item v-for="item in items" :key="item" link>
-            <v-list-item-title v-text="item"></v-list-item-title>
+          <v-list-item to="/user/settings" link>
+            <v-list-item-title> Settings </v-list-item-title>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-title> About Librefit </v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="logOut" link>
+            <v-list-item-title> Logout </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -73,13 +82,6 @@
             </v-list-item>
           </v-list-group>
         </template>
-        <!-- Only the logout buttom is not in the loop -->
-        <v-list-item @click="logOut()">
-          <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
-          <v-list-item-content
-            ><v-list-item-title>Log Out</v-list-item-title></v-list-item-content
-          >
-        </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </nav>
@@ -92,7 +94,7 @@ export default {
       drawer: false,
       items: ['Profile', 'Sign Out'],
       genericMenu: [
-        { icon: 'mdi-view-dashboard', text: 'Home', route: '/' },
+        { icon: 'mdi-view-dashboard', text: 'Personal Dashboard', route: '/' },
         {
           icon: 'mdi-silverware',
           text: 'Food',
@@ -129,9 +131,7 @@ export default {
           icon: 'mdi-run-fast',
           text: 'Activities (soon!)',
           route: '/comingsoon'
-        },
-        { divider: true },
-        { icon: 'mdi-cog-outline', text: 'Settings', route: '/user/settings' }
+        }
       ]
     }
   },
