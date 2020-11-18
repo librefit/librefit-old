@@ -13,19 +13,19 @@ type FoodInventory struct {
 	UserID      uint
 	FoodDiary   []FoodDiary
 	// Important values to save so we're not always querying OFF
-	Calories           float64
-	FatTotal           float64
-	FatSaturated       float64
-	FatPolyunsaturated float64
-	FatMonounsaturated float64
-	FatTrans           float64
-	FatCholesterol     float64
-	Sodium             float64
-	Potassium          float64
-	Carbs              float64
-	Fibers             float64
-	Sugars             float64
-	Proteins           float64
+	Calories           float32
+	FatTotal           float32
+	FatSaturated       float32
+	FatPolyunsaturated float32
+	FatMonounsaturated float32
+	FatTrans           float32
+	FatCholesterol     float32
+	Sodium             float32
+	Potassium          float32
+	Carbs              float32
+	Fibers             float32
+	Sugars             float32
+	Proteins           float32
 }
 
 func FindOneFoodInventory(id string) (FoodInventory, error) {
@@ -62,19 +62,19 @@ func FindOrCreateFoodInventory(u uint, o string) (*FoodInventory, error) {
 	}
 
 	r.ProductName = product.ProductName
-	r.Calories = product.Nutriments.EnergyKcal100G
-	r.FatTotal = product.Nutriments.Fat100G
-	r.FatSaturated = product.Nutriments.SaturatedFat100G
-	r.FatPolyunsaturated = product.Nutriments.PolyunsaturatedFat100G
-	r.FatMonounsaturated = product.Nutriments.MonounsaturatedFat100G
-	r.FatTrans = product.Nutriments.TransFat100G
-	r.FatCholesterol = product.Nutriments.Cholesterol100G
-	r.Sodium = product.Nutriments.Sodium100G
-	r.Potassium = product.Nutriments.Potassium100G
-	r.Carbs = product.Nutriments.Carbohydrates100G
-	r.Fibers = product.Nutriments.Fiber100G
-	r.Sugars = product.Nutriments.Sugars100G
-	r.Proteins = product.Nutriments.Proteins100G
+	r.Calories = float32(product.Nutriments.EnergyKcal100G)
+	r.FatTotal = float32(product.Nutriments.Fat100G)
+	r.FatSaturated = float32(product.Nutriments.SaturatedFat100G)
+	r.FatPolyunsaturated = float32(product.Nutriments.PolyunsaturatedFat100G)
+	r.FatMonounsaturated = float32(product.Nutriments.MonounsaturatedFat100G)
+	r.FatTrans = float32(product.Nutriments.TransFat100G)
+	r.FatCholesterol = float32(product.Nutriments.Cholesterol100G)
+	r.Sodium = float32(product.Nutriments.Sodium100G)
+	r.Potassium = float32(product.Nutriments.Potassium100G)
+	r.Carbs = float32(product.Nutriments.Carbohydrates100G)
+	r.Fibers = float32(product.Nutriments.Fiber100G)
+	r.Sugars = float32(product.Nutriments.Sugars100G)
+	r.Proteins = float32(product.Nutriments.Proteins100G)
 
 	if err := DB.Save(&r).Error; err != nil {
 		return nil, err

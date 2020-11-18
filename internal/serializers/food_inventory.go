@@ -9,19 +9,19 @@ type FoodInventoryRes struct {
 	OffCode            string  `json:"off_code"`
 	ProductName        string  `json:"product_name"`
 	Favourite          bool    `json:"favourite"`
-	Calories           float64 `json:"calories"`
-	FatTotal           float64 `json:"fat_total"`
-	FatSaturated       float64 `json:"fat_saturated"`
-	FatPolyunsaturated float64 `json:"fat_polyunsaturated"`
-	FatMonounsaturated float64 `json:"fat_monounsaturated"`
-	FatTrans           float64 `json:"fat_trans"`
-	FatCholesterol     float64 `json:"fat_cholesterol"`
-	Sodium             float64 `json:"sodium"`
-	Potassium          float64 `json:"potassium"`
-	Carbs              float64 `json:"carbs"`
-	Fibers             float64 `json:"fibers"`
-	Sugars             float64 `json:"sugars"`
-	Protein            float64 `json:"proteins"`
+	Calories           float32 `json:"calories"`
+	FatTotal           float32 `json:"fat_total"`
+	FatSaturated       float32 `json:"fat_saturated"`
+	FatPolyunsaturated float32 `json:"fat_polyunsaturated"`
+	FatMonounsaturated float32 `json:"fat_monounsaturated"`
+	FatTrans           float32 `json:"fat_trans"`
+	FatCholesterol     float32 `json:"fat_cholesterol"`
+	Sodium             float32 `json:"sodium"`
+	Potassium          float32 `json:"potassium"`
+	Carbs              float32 `json:"carbs"`
+	Fibers             float32 `json:"fibers"`
+	Sugars             float32 `json:"sugars"`
+	Proteins           float32 `json:"proteins"`
 }
 
 func FoodInventoryResponse(f *db.FoodInventory) FoodInventoryRes {

@@ -33,12 +33,7 @@
               >{{ date | formatDate }}
             </v-btn>
           </template>
-          <v-date-picker v-model="date">
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(date)"
-              >OK</v-btn
-            >
+          <v-date-picker v-model="date" @input="$refs.menu.save(date)">
           </v-date-picker>
         </v-menu>
       </v-card-text>
@@ -50,7 +45,7 @@
 
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="getFoodDiary('B')"
           class="elevation-1"
           disable-pagination
           :hide-default-footer="true"
@@ -65,9 +60,10 @@
         <div class="py-3" />
 
         <p>Lunch</p>
+
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="getFoodDiary('L')"
           class="elevation-1"
           disable-pagination
           :hide-default-footer="true"
@@ -84,7 +80,7 @@
         <p>Dinner</p>
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="getFoodDiary('D')"
           class="elevation-1"
           disable-pagination
           :hide-default-footer="true"
@@ -101,7 +97,7 @@
         <p>Snacks</p>
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="getFoodDiary('S')"
           class="elevation-1"
           disable-pagination
           :hide-default-footer="true"
@@ -111,6 +107,16 @@
               item.calories
             }}</v-chip>
           </template>
+
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">
+              mdi-pencil
+            </v-icon>
+            <v-icon small @click="deleteItem(item)">
+              mdi-delete
+            </v-icon>
+          </template>
+
         </v-data-table>
 
         <div class="py-3" />
@@ -134,66 +140,59 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   data: () => ({
     dateMenu: false,
     date: new Date().toISOString().substr(0, 10),
+    foodDiaryArr: [],
     headers: [
       {
         text: 'Meal (100g serving)',
         align: 'start',
         sortable: false,
-        value: 'name'
+        value: 'product_name'
       },
       { text: 'Calories (kcal)', value: 'calories' },
       { text: 'Carbs (g)', value: 'carbs' },
-      { text: 'Fat (g)', value: 'fat' },
-      { text: 'Protein (g)', value: 'protein' },
+      { text: 'Fat (g)', value: 'fat_total' },
+      { text: 'Protein (g)', value: 'proteins' },
       { text: 'Sodium (g)', value: 'sodium' },
-      { text: 'Sugar', value: 'sugar' }
+      { text: 'Sugars', value: 'sugars' },
+      { text: 'Actions', value: 'actions', sortable: false }
     ],
-    desserts: [
-      {
-        name: 'Frozen Yogurt',
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        sodium: '12',
-        sugar: '2'
-      },
-      {
-        name: 'Ice cream sandwich',
-        calories: 237,
-        fat: 9.0,
-        carbs: 37,
-        protein: 4.3,
-        sodium: '12',
-        sugar: '2'
-      },
-      {
-        name: 'KitKat',
-        calories: 518,
-        fat: 26.0,
-        carbs: 65,
-        protein: 7,
-        sodium: '12',
-        sugar: '2'
-      }
-    ]
   }),
+  
+  mounted() {
+    this.$store.dispatch('food/foodDiary', { start: this.date, end: this.date })
+  },
 
   computed: {
+    ...mapGetters('food', [
+      'getFoodDiary',
+    ]),
+    
     dateText() {
       return this.date
     }
   },
 
+  watch: {
+    date: function(val) {
+      const d = new Date(val).toISOString().slice(0, 10)
+      this.foodDiary({ start: d, end: d })
+    }
+  },
+
   methods: {
+    ...mapActions('food', ['foodDiary']),
+
     moveDate(direction) {
       var d = new Date(this.date)
       d.setDate(d.getDate() - direction)
       this.date = d.toISOString().substr(0, 10)
+      this.foodDiary({ start: this.date, end: this.date })
     },
     getColor(calories) {
       if (calories > 400) return 'red'

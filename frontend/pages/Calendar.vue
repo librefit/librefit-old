@@ -111,9 +111,6 @@ export default {
     updateRange({ start, end }) {
       const events = []
       
-      console.log("Tengo:", start)
-      console.log(end)
-      
       var startDate = new Date(start.date)
       var endDate = new Date(end.date)
 
