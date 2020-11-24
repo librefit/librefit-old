@@ -8,6 +8,7 @@ type FoodInventoryRes struct {
 	ID                 uint    `json:"id"`
 	OffCode            string  `json:"off_code"`
 	ProductName        string  `json:"product_name"`
+	Description        string  `json:"description"`
 	Favourite          bool    `json:"favourite"`
 	Calories           float32 `json:"calories"`
 	FatTotal           float32 `json:"fat_total"`
@@ -26,9 +27,24 @@ type FoodInventoryRes struct {
 
 func FoodInventoryResponse(f *db.FoodInventory) FoodInventoryRes {
 	return FoodInventoryRes{
-		ID:        f.ID,
-		OffCode:   f.OffCode,
-		Favourite: f.Favourite,
+		ID:                 f.ID,
+		OffCode:            f.OffCode,
+		ProductName:        f.ProductName,
+		Description:        f.Description,
+		Favourite:          f.Favourite,
+		Calories:           f.Calories,
+		FatTotal:           f.FatTotal,
+		FatSaturated:       f.FatSaturated,
+		FatPolyunsaturated: f.FatPolyunsaturated,
+		FatMonounsaturated: f.FatMonounsaturated,
+		FatTrans:           f.FatTrans,
+		FatCholesterol:     f.FatCholesterol,
+		Sodium:             f.Sodium,
+		Potassium:          f.Potassium,
+		Carbs:              f.Carbs,
+		Fibers:             f.Fibers,
+		Sugars:             f.Sugars,
+		Proteins:           f.Proteins,
 	}
 }
 

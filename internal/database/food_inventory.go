@@ -9,6 +9,7 @@ type FoodInventory struct {
 	gorm.Model
 	OffCode     string
 	ProductName string
+	Description string
 	Favourite   bool
 	UserID      uint
 	FoodDiary   []FoodDiary
