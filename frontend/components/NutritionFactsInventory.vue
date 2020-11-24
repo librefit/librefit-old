@@ -3,19 +3,15 @@
     <section class="performance-facts">
       <header class="performance-facts__header">
         <h1 class="performance-facts__title">Nutrition Facts</h1>
-        <p v-if="product.serving_size">Serving Size: {{ product.serving_size }} </p>
       </header>
       <table class="performance-facts__table">
         <tbody>
-          <tr v-if="product.nutriments.energy_value">
+          <tr>
             <th colspan="2" class="text-h5">
               <b>Calories</b>
             </th>
             <td class="text-h5">
-              <b
-                >{{ product.nutriments.energy_value }}
-                </b
-              >
+              <b>{{ product.calories }} </b>
             </td>
           </tr>
           <tr class="thick-row">
@@ -23,119 +19,103 @@
               <b>100 {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments.fat_100g">
+          <tr>
             <th colspan="2">
               <b>Total Fat</b>
             </th>
             <td>
-              <b> {{ product.nutriments.fat_100g }} {{ unit }} </b>
+              <b> {{ product.fat_total }} {{ unit }} </b>
             </td>
           </tr>
-          <tr v-if="product.nutriments['saturated-fat_100g']">
+          <tr>
             <td class="blank-cell"></td>
             <th>
               Saturated Fat
             </th>
             <td>
-              <b>{{ product.nutriments['saturated-fat_100g'] }} {{ unit }}</b>
+              <b>{{ product.fat_saturated }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments['polyunsaturated-fat_100g']">
+          <tr>
             <td class="blank-cell"></td>
             <th>
               Polyunsaturated Fat
             </th>
             <td>
-              <b
-                >{{ product.nutriments['polyunsaturated-fat_100g'] }}
-                {{ unit }}</b
-              >
+              <b>{{ product.fat_polyunsaturated }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments['monounsaturated-fat_100g']">
+          <tr>
             <td class="blank-cell"></td>
             <th>
               Monounsaturated Fat
             </th>
             <td>
-              <b
-                >{{ product.nutriments['monounsaturated-fat_100g'] }}
-                {{ unit }}</b
-              >
+              <b>{{ product.fat_monounsaturated }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments['trans-fat_100g'] || product.nutriments['trans-fat_100g'] == 0">
+          <tr>
             <td class="blank-cell"></td>
             <th>
               Trans
             </th>
             <td>
-              <b
-                >{{ product.nutriments['trans-fat_100g'] }}
-                {{ unit }}</b
-              >
+              <b>{{ product.fat_trans }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments['cholesterol_100g'] || product.nutriments['cholesterol_100g'] == 0">
-            <td class="blank-cell"></td>
-            <th>
-              Cholesterol
-            </th>
-            <td>
-              <b
-                >{{ product.nutriments['cholesterol_100g'] }}
-                {{ unit }}</b
-              >
-            </td>
-          </tr>
-          <tr v-if="product.nutriments['salt_100g']">
+          <tr>
             <th colspan="2">
-              <b>Salt</b>
+              <b>Cholesterol</b>
             </th>
             <td>
-              <b>{{ product.nutriments['salt_100g'] }} {{ unit }} </b>
+              <b>{{ product.fat_cholesterol }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments['sodium_100g'] || product.nutriments['sodium_100g'] == 0">
-            <td class="blank-cell"></td>
-            <th>
-              Sodium
+          <tr>
+            <th colspan="2">
+              <b>Sodium</b>
             </th>
             <td>
-              <b
-                >{{ product.nutriments['sodium_100g'] }}
-                {{ unit }}</b
-              >
+              <b>{{ product.sodium }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments.carbohydrates_value">
+          <tr>
+            <th colspan="2">
+              <b>Potassium</b>
+            </th>
+            <td>
+              <b>{{ product.potassium }} {{ unit }}</b>
+            </td>
+          </tr>
+
+          <tr>
             <th colspan="2">
               <b>Total Carbohydrate</b>
             </th>
             <td>
-              <b>{{ product.nutriments.carbohydrates_value }}g</b>
+              <b>{{ product.carbs }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments.sugars_100g || product.nutriments.sugars_100g == 0">
+          <tr>
             <td class="blank-cell"></td>
             <th>
               Sugars
             </th>
             <td>
-              <b>{{ product.nutriments.sugars_100g }} {{ unit }}</b>
+              <b>{{ product.sugars }} {{ unit }}</b>
             </td>
           </tr>
-          <tr v-if="product.nutriments.proteins" class="thick-end">
+          <tr class="thick-end">
             <th colspan="2">
               <b>Protein</b>
             </th>
-            <td>{{ product.nutriments.proteins }} {{ unit }}</td>
+            <td>{{ product.proteins }} {{ unit }}</td>
           </tr>
         </tbody>
       </table>
       <p class="text-center">
         <a
-          :href="'https://world.openfoodfacts.org/product/' + product.code"
+          :href="'https://world.openfoodfacts.org/product/' + product.off_code"
           target="_blank"
           >More details in OpenFoodFacts</a
         >
@@ -146,7 +126,7 @@
 
 <script>
 export default {
-  name: 'NutritionFacts',
+  name: 'NutritionFactsInventory',
 
   data: () => ({
     unit: null
