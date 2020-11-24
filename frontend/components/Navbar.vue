@@ -22,7 +22,7 @@
             <v-list-item-title> Settings </v-list-item-title>
           </v-list-item>
           <v-list-item link>
-            <v-list-item-title> About Librefit </v-list-item-title>
+            <v-list-item-title> About LibreFit </v-list-item-title>
           </v-list-item>
           <v-list-item @click="logOut" link>
             <v-list-item-title> Logout </v-list-item-title>
