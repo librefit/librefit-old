@@ -4,8 +4,7 @@ import headers from '~/plugins/headers'
 export const state = () => ({
   inventory: [],
   diary: [],
-  diaryDate: [],
-  statsByDate: []
+  diaryDate: []
 })
 
 export const getters = {
@@ -15,50 +14,8 @@ export const getters = {
   getAllInventory: state => {
     return state.inventory
   },
-  getPieChartDataSet: state => day => {
-    var r
-    if (state.statsByDate?.length) {
-      state.statsByDate.forEach(i => {
-        if (day === i.date) {
-          r = {
-            datasets: [
-              {
-                data: [i.fat, i.carbs, i.proteins],
-                backgroundColor: [
-                  'red',
-                  'rgb(255,253,169)',
-                  'rgb(134,224,102)'
-                ],
-                fill: true
-              }
-            ],
-            labels: ['Fat', 'Carbs', 'Proteins']
-          }
-        }
-      })
-    }
-
-    if (!r) {
-      r = undefined
-    }
-
-    return r
-  },
-  getStats: state => day => {
-    var r
-    if (state.statsByDate?.length) {
-      state.statsByDate.forEach(i => {
-        if (day === i.date) {
-          r = i
-        }
-      })
-    }
-
-    if (!r) {
-      r = 'N/A'
-    }
-
-    return r
+  getInventoryItem: state => id => {
+    return state.inventory.filter(x => x.id === Number(id))[0]
   },
   getFoodDiary: state => id => {
     var r = new Array()
@@ -83,9 +40,39 @@ export const getters = {
 
 export const actions = {
   add2Inventory({ commit }, payload) {
-    axios.post('/inventory', payload, headers()).then(
+    axios.post('/food/inventory', payload, headers()).then(
       response => {
         commit('append2Inventory', response.data)
+      },
+      error => {
+        commit(
+          'snackbar/showMessage',
+          { content: error, color: 'red' },
+          { root: true }
+        )
+      }
+    )
+  },
+  updateInventory({ commit }, payload) {
+    const id = payload.id
+    delete payload.id
+    axios.put('/food/inventory/' + id, payload, headers()).then(
+      response => {
+        commit('updateInventory', response.data)
+      },
+      error => {
+        commit(
+          'snackbar/showMessage',
+          { content: error, color: 'red' },
+          { root: true }
+        )
+      }
+    )
+  },
+  pullInventory({ commit }) {
+    axios.get('/food/inventory', headers()).then(
+      response => {
+        commit('setInventory', response.data)
       },
       error => {
         commit(
@@ -128,43 +115,33 @@ export const actions = {
           )
         }
       )
-  },
-  foodStats({ commit }, payload) {
-    axios
-      .get('/stats/food_diary', {
-        params: { start: payload.start, end: payload.end },
-        headers: { Authorization: localStorage.getItem('auth._token.local') }
-      })
-      .then(
-        response => {
-          commit('statsByDate', response.data)
-        },
-        error => {
-          commit(
-            'snackbar/showMessage',
-            { content: error, color: 'red' },
-            { root: true }
-          )
-        }
-      )
   }
 }
 
 export const mutations = {
+  setInventory: (state, payload) => {
+    state.inventory = payload
+  },
   append2Inventory: (state, payload) => {
     state.inventory.push(payload)
+    $nuxt._router.push('/food/inventory')
   },
   append2Diary: (state, payload) => {
     state.diary.push(payload)
     $nuxt._router.push('/food/diary')
   },
-  statsByDate: (state, payload) => {
-    // If it doesn't get any payload it means not FoodDiary entry for this date
-    if (payload === undefined || payload.length == 0) {
-      state['statsByDate'] = []
-    } else {
-      state.statsByDate = payload
-    }
+  updateInventory: (state, payload) => {
+    const index = state.inventory.findIndex(x => x.id == payload.id)
+    state.inventory.splice(index, 1, payload)
+    $nuxt._router.push('/food/inventory/' + payload.id)
+  },
+  updateInventoryItem: (state, payload) => {
+    const elementPos = state.inventory
+      .map(function(x) {
+        return x.id
+      })
+      .indexOf(payload.id)
+    state.inventory[elementPos][payload.element] = payload.value
   },
   diaryByDate: (state, payload) => {
     // If it doesn't get any payload it means not FoodDiary entry for this date
