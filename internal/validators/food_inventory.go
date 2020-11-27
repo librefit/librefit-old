@@ -9,8 +9,8 @@ import (
 
 type FoodInventoryValidator struct {
 	FoodInventory struct {
-		OffCode            string  `json:"off_code" binding:"required"`
-		ProductName        string  `json:"product_name"`
+		OffCode            string  `json:"off_code"`
+		ProductName        string  `json:"product_name" binding:"required"`
 		Description        string  `json:"description"`
 		Favourite          bool    `json:"favourite"`
 		Calories           float32 `json:"calories"`
