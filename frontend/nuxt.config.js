@@ -25,6 +25,7 @@ export default {
   plugins: [
     '@/plugins/datetime-picker.js',
     '@/plugins/filters.js',
+    '@/plugins/vuelidate.js',
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

@@ -81,13 +81,20 @@
           </tr>
           <tr>
             <th colspan="2">
+              <b>Fiber</b>
+            </th>
+            <td>
+              <b>{{ product.fibers }} {{ unit }}</b>
+            </td>
+          </tr>
+          <tr>
+            <th colspan="2">
               <b>Potassium</b>
             </th>
             <td>
               <b>{{ product.potassium }} {{ unit }}</b>
             </td>
           </tr>
-
           <tr>
             <th colspan="2">
               <b>Total Carbohydrate</b>
@@ -109,17 +116,12 @@
             <th colspan="2">
               <b>Protein</b>
             </th>
-            <td>{{ product.proteins }} {{ unit }}</td>
+            <td>
+              <b>{{ product.proteins }} {{ unit }}</b>
+            </td>
           </tr>
         </tbody>
       </table>
-      <p class="text-center">
-        <a
-          :href="'https://world.openfoodfacts.org/product/' + product.off_code"
-          target="_blank"
-          >More details in OpenFoodFacts</a
-        >
-      </p>
     </section>
   </div>
 </template>

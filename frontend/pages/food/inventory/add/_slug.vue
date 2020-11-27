@@ -87,7 +87,7 @@
           </v-card>
         </v-col>
         <v-col align="center">
-          <NutritionFacts v-if="product" :product="product"> </NutritionFacts>
+          <OffNutritionFacts v-if="product" :product="product"> </OffNutritionFacts>
           <p v-if="product" class="text-subtitle-1 mt-4">
             No the right values?
             <a
