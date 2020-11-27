@@ -9,39 +9,6 @@ export const getters = {
   getAllMeasures: state => {
     return state.allMeasures
   },
-  getByMonth: state => (start, end) => {
-    var r = new Array()
-    state.allMeasures.forEach(i => {
-      var dt = new Date(i.date)
-      if (dt.getMonth() == start.getMonth()) {
-        r.push(i)
-      }
-    })
-    return r
-  },
-  lastMeasureTaken: state => day => {
-    var m = new Array()
-    var d = new Date(day)
-
-    if (state.allMeasures?.length) {
-      state.allMeasures.forEach(i => {
-        var dt = new Date(i.date)
-        if (dt.getTime() <= d.getTime()) {
-          m.push(i)
-        }
-      })
-    }
-
-    var r = m.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    )[0]
-    if (!r) {
-      return 'N/A'
-    } else {
-      // It won't always be kgs, this has to change
-      return r.value + 'kg'
-    }
-  },
   getLineChartOptions: () => {
     return {
       responsive: true,

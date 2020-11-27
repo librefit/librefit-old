@@ -3,65 +3,12 @@ import headers from '~/plugins/headers'
 
 export const state = () => ({
   allFluids: [],
-  stats: []
 })
 
 export const getters = {
   getAllFluids: state => {
     return state.allFluids
-  },
-  getByMonth: state => (start, end) => {
-    var r = new Array()
-
-    if (state.stats?.length) {
-      state.stats.forEach(i => {
-        var dt = new Date(i.date)
-        if (dt.getMonth() == start.getMonth()) {
-          r.push(i)
-        }
-      })
-    }
-    return r
-  },
-  totalByDay: state => day => {
-    var r
-    var d = new Date(day)
-
-    if (state.stats?.length) {
-      state.stats.forEach(i => {
-        var dt = new Date(i.date)
-        if (dt.getTime() === d.getTime()) {
-          r = i.value.toString()
-        }
-      })
-    }
-
-    if (!r) {
-      return 'N/A'
-    }
-
-    return r + 'ml'
   }
-  // getChartOptions: state => {
-  //   return {
-  //     chart: {
-  //       id: "Weight Chart"
-  //     },
-  //     xaxis: {
-  //       categories: state.Fluids.map(function(a) {
-  //         return a.date;
-  //       })
-  //     }
-  //   };
-  // },
-  // getChartSeries: state => {
-  //   return {
-  //     name: "series-1",
-  //     data: state.Fluids.map(function(a) {
-  //       return a.value;
-  //     })
-  //   };
-  // }
 }
 
 export const actions = {
@@ -71,22 +18,6 @@ export const actions = {
         commit('initFluids', response.data)
       },
       error => {
-        commit('showMessage', { content: error, color: 'red' })
-        commit(
-          'snackbar/showMessage',
-          { content: error, color: 'red' },
-          { root: true }
-        )
-      }
-    )
-  },
-  statsFluids({ commit }) {
-    axios.get('/stats/fluids', headers()).then(
-      response => {
-        commit('statsFluids', response.data)
-      },
-      error => {
-        commit('showMessage', { content: error, color: 'red' })
         commit(
           'snackbar/showMessage',
           { content: error, color: 'red' },
@@ -168,9 +99,6 @@ export const mutations = {
   removeFluid: (state, payload) => {
     const index = state.allFluids.indexOf(payload)
     state.allFluids.splice(index, 1)
-  },
-  statsFluids: (state, payload) => {
-    state.stats = payload
   },
   removeAllFluids: state => {
     state.allFluids = []
