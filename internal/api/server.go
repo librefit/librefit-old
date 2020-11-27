@@ -50,6 +50,7 @@ func (s *HTTPServer) init() error {
 	r.Use(CORS())
 
 	r.Use(static.Serve("/", static.LocalFile("./static", true)))
+	r.Use(static.Serve("/img", static.LocalFile("./data/img", true)))
 
 	// Middleware for JWT
 	authMiddleware, err := jwt.New(newGinJWTMiddleware())
@@ -73,6 +74,10 @@ func (s *HTTPServer) init() error {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found."})
 	})
 
+	// Because of fileUpload:
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	r.MaxMultipartMemory = 8 << 20 // 8 MiB
+
 	// API Routes
 	v1 := r.Group("/api/v1")
 	{
@@ -84,6 +89,9 @@ func (s *HTTPServer) init() error {
 		// We don't need middleware for OpenFoodFacts search
 		v1.GET("/off/search", offSearch)
 		v1.GET("/off/product/:code", offProduct)
+
+		// Uploads
+		v1.POST("/upload", fileUpload)
 	}
 
 	v1.Use(authMiddleware.MiddlewareFunc())
