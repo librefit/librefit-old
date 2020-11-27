@@ -145,35 +145,29 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-
 export default {
   middleware: 'auth',
   data: () => ({
     dateMenu: false,
     date: new Date().toISOString().substr(0, 10),
-    value: [423, 446, 675, 510, 590, 610, 760],
     getPieChartOptions: {
       responsive: true,
       maintainAspectRatio: false
-    },
+    }
   }),
 
   computed: {
     totalLiquids() {
-      return this.$store.getters['fluids/totalByDay'](this.date)
+      return this.$store.getters['stats/getFluidsByDay'](this.date)
     },
     lastMeasure() {
-      return this.$store.getters['measures/lastMeasureTaken'](this.date)
-    },
-    statsFoodDiary() {
-      return this.$store.getters['food/getStats'](this.date)
+      return this.$store.getters['stats/lastMeasureTaken'](this.date)
     },
     getPieChartData() {
-      return this.$store.getters['food/getPieChartDataSet'](this.date)
+      return this.$store.getters['stats/getFoodByDayPieChart'](this.date)
     },
     totalCalories() {
-      var d = this.statsFoodDiary
+      var d = this.$store.getters['stats/getFoodByDay'](this.date)
       if (d != 'N/A') {
         return d.calories.toString()
       }
@@ -181,23 +175,15 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('fluids/statsFluids')
-    this.$store.dispatch('measures/loadMeasures')
-    this.$store.dispatch('food/foodStats', { start: this.date, end: this.date })
+    this.$store.dispatch('stats/pullAll')
   },
 
   methods: {
-    ...mapActions('food', ['foodStats']),
-
     moveDate(direction) {
       var d = new Date(this.date)
       d.setDate(d.getDate() - direction)
       this.date = d.toISOString().substr(0, 10)
-      this.foodStats({ start: this.date, end: this.date })
     }
   }
 }
-
-
-
 </script>
