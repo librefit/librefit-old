@@ -35,7 +35,7 @@ func createAdmin() error {
 		return err
 	}
 
-	err = DB.Where(User{Username: "admin"}).FirstOrCreate(&user).Error
+	err = DB.FirstOrCreate(&user, 1).Error
 	if err != nil {
 		return err
 	}
