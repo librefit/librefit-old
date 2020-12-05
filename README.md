@@ -40,6 +40,17 @@ Initially, it'll generate SQlite file `librefit.db` containing all your data.
 
 LibreFit is **PRE-ALPHA** version. Please do not use it yet.
 
+## Contributing
+
+1. Fork it
+2. Clone develop: `git clone -b develop https://github.com/tucnak/telebot`
+3. Create your feature branch: `git checkout -b new-feature`
+4. Make changes and add them: `git add .`
+5. Commit: `git commit -m "Add some feature"`
+6. Push: `git push origin new-feature`
+7. Pull request
+
+
 ## Roadmap
 
 - Exercise tracking
