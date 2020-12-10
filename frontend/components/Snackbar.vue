@@ -3,7 +3,7 @@
     <v-snackbar
       v-model="show"
       top
-      color="red lighten-1"
+      :color="color"
       timeout="2000"
       :multi-line="multiLine"
       elevation="24"
