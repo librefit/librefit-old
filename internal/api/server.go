@@ -98,6 +98,7 @@ func (s *HTTPServer) init() error {
 	{
 		// User
 		v1.GET("/user/info", userInfo)
+		v1.GET("/user/preferences", userPreferences)
 		v1.PUT("/user/preferences", userPreferencesUpdate)
 
 		// Measures (a.k.a weight)

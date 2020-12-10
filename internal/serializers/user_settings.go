@@ -1,6 +1,8 @@
 package serializers
 
 import (
+	"fmt"
+
 	db "github.com/librefitness/librefitness/internal/database"
 )
 
@@ -29,7 +31,7 @@ func UserSettingResponse(s *db.UserSetting) UserSettingRes {
 		Theme:         s.Theme,
 		FullName:      s.FullName,
 		Email:         s.Email,
-		Birthday:      s.Birthday,
+		Birthday:      fmt.Sprintf("%s", s.Birthday.Format("2006-01-02")),
 		UseMetric:     s.UseMetric,
 		Sex:           s.Sex,
 		Height:        s.Height,
