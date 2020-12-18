@@ -1,6 +1,6 @@
 # LibreFit: Open Source calorie counter, diet plan and exercise tracker
 
-LibreFit is a server-based application for count calories, plan diets and track exercise:
+LibreFit is a server-based application for calorie counting, diet plans and exercise tracking.
 
  - Written in Go (Golang) and NuxtJS.
  - Free, open source and self-hosted
