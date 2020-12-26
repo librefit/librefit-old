@@ -90,14 +90,16 @@ func (s *HTTPServer) init() error {
 		v1.GET("/off/search", offSearch)
 		v1.GET("/off/product/:code", offProduct)
 
-		// Uploads
-		v1.POST("/upload", fileUpload)
 	}
 
 	v1.Use(authMiddleware.MiddlewareFunc())
 	{
+		// Uploads
+		v1.POST("/upload", fileUpload)
+
 		// User
 		v1.GET("/user/info", userInfo)
+		v1.PUT("/user/info", updateUser)
 		v1.GET("/user/preferences", userPreferences)
 		v1.PUT("/user/preferences", userPreferencesUpdate)
 
