@@ -112,11 +112,14 @@
               <v-btn depressed color="primary" @click="save">
                 Update
               </v-btn>
+              <v-btn depressed color="red" @click="remove">
+                Delete
+              </v-btn>
               <v-btn class="ml-3">
                 <v-icon color="pink">
                   mdi-heart
                 </v-icon>
-                Mark as Favorite
+                Favorite
               </v-btn>
             </v-form>
           </v-card>
@@ -124,6 +127,18 @@
         <v-col align="center">
           <NutritionFactsInventory v-if="product" :product="product">
           </NutritionFactsInventory>
+          <p v-if="offCode" class="text-subtitle-1 mt-4">
+            No the right values?
+            <a
+              :href="
+                'https://world.openfoodfacts.org/cgi/product.pl?type=edit&code=' +
+                  offCode
+              "
+              target="_blank"
+              >Edit product in Open Food Facts</a
+            >
+            (you must Sign-in)
+          </p>
         </v-col>
       </v-row>
     </v-container>
@@ -148,6 +163,13 @@ export default {
   computed: {
     product() {
       return this.$store.getters['food/getInventoryItem'](this.slug)
+    },
+    offCode: {
+      get() {
+        if (this.$store.getters['food/getInventoryItem'](this.slug)) {
+          return this.product.off_code
+        }
+      },
     },
     productName: {
       get() {
@@ -348,10 +370,14 @@ export default {
   },
 
   methods: {
-    ...mapActions('food', ['updateInventory']),
+    ...mapActions('food', ['updateInventory', 'deleteInventory']),
 
     save() {
       this.updateInventory(this.product)
+    },
+    
+    remove() {
+      this.deleteInventory(this.product.id)
     }
   }
 }
