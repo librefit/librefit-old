@@ -139,7 +139,10 @@ export const actions = {
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
@@ -151,7 +154,10 @@ export const actions = {
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
@@ -163,7 +169,10 @@ export const actions = {
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
