@@ -54,6 +54,5 @@ func (self *MeasurementValidator) Bind(c *gin.Context) error {
 }
 
 func NewMeasurementValidator() MeasurementValidator {
-	MeasurementValidator := MeasurementValidator{}
-	return MeasurementValidator
+	return MeasurementValidator{}
 }
