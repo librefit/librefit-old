@@ -3,12 +3,18 @@ import headers from '~/plugins/headers'
 
 export const state = () => ({
   settings: [],
+  username: null,
+  password: null,
+  loadingStatus: false
 })
 
 export const getters = {
   getSettings: state => {
     return state.settings
   },
+  getLoadingStatus: state => {
+    return state.loadingStatus
+  }
 }
 
 export const actions = {
@@ -20,31 +26,76 @@ export const actions = {
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
     )
   },
+  update({ commit, state }, payload) {
+    axios.put('/user/info', payload, headers()).then(
+      response => {
+        commit(
+          'snackbar/showMessage',
+          { content: 'Successfully updated', color: 'green' },
+          { root: true }
+        )
+        $nuxt._router.push('/login')
+      },
+      error => {
+        commit(
+          'snackbar/showMessage',
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
+          { root: true }
+        )
+      }
+    )
+  },
+  updatePreferences({ commit, state }, payload) {
+    axios
+      .put('/user/preferences', payload, headers())
+      .then(
+        response => {
+          commit(
+            'snackbar/showMessage',
+            { content: 'Successfully updated preferences', color: 'green' },
+            { root: true }
+          )
+        },
+        error => {
+          commit(
+            'snackbar/showMessage',
+            {
+              content: error + ': ' + JSON.stringify(error.response.data),
+              color: 'red'
+            },
+            { root: true }
+          )
+        }
+      )
+  }
 }
 
 export const mutations = {
   setSettings: (state, payload) => {
     state.settings = payload
   },
+  setFormInput: (state, payload) => {
+    state.settings.user_settings[payload.field] = payload.value
+  },
   setUsername: (state, payload) => {
     state.settings.username = payload
   },
-  setFullName: (state, payload) => {
-    state.settings.user_settings.full_name = payload
+  update: (state, payload) => {
+    state[payload.element] = payload.value
   },
-  setEmail: (state, payload) => {
-    state.settings.user_settings.email = payload
-  },
-  setDob: (state, payload) => {
-    state.settings.user_settings.birthday = payload
-  },
-  setUseMetric: (state, payload) => {
-    state.settings.user_settings.use_metric = payload
-  },
+  loadingStatus(state, value) {
+    state.loadingStatus = value
+  }
 }
