@@ -1,18 +1,21 @@
 package database
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	openfoodfacts "github.com/mogaal/openfoodfacts-go"
 	"gorm.io/gorm"
 )
 
 type FoodInventory struct {
 	gorm.Model
-	OffCode     string
-	ProductName string
-	Description string
-	Favourite   bool
-	UserID      uint
-	FoodDiary   []FoodDiary
+	OffCode          string
+	ProductName      string
+	Description      string
+	Favourite        bool
+	UserID           uint
+	FoodDiary        []FoodDiary
+	FoodInventoryImg []FoodInventoryImg
+
 	// Important values to save so we're not always querying OFF
 	Calories           float32
 	FatTotal           float32
@@ -29,23 +32,39 @@ type FoodInventory struct {
 	Proteins           float32
 }
 
+type FoodInventoryImg struct {
+	gorm.Model
+	UploadID        uint
+	FoodInventoryID uint
+	Upload          Upload
+	FoodInventory   FoodInventory
+}
+
 func FindOneFoodInventory(id string) (FoodInventory, error) {
 	var f FoodInventory
-	err := DB.Find(&f, id).Error
+	err := DB.Preload("FoodInventoryImg").Find(&f, id).Error
 	return f, err
 }
 
 func DeleteFoodInventory(id string) error {
 	var f FoodInventory
-	if err := DB.First(&f, "id = ?", id).Error; err != nil {
+	if err := DB.Preload("FoodDiary").First(&f, "id = ?", id).Error; err != nil {
 		return err
 	}
-	return DB.Unscoped().Delete(f).Error
+
+	// In case there are Foreign keys from Food Diary table
+	if f.FoodDiary == nil {
+		return DB.Unscoped().Delete(f).Error
+	}
+
+	return DB.Delete(f).Error
 }
 
 func FindManyFoodInventory(UserID uint) ([]FoodInventory, error) {
 	var f []FoodInventory
-	err := DB.Find(&f, "user_id = ?", UserID).Error
+	err := DB.Preload("FoodInventoryImg").Find(&f, "user_id = ?", UserID).Error
+
+	spew.Dump(f)
 	return f, err
 }
 
