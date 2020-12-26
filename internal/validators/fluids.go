@@ -6,7 +6,6 @@ import (
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 
 	db "github.com/librefitness/librefitness/internal/database"
@@ -65,8 +64,6 @@ func (self *FluidValidator) Bind(c *gin.Context) error {
 	claims := jwt.ExtractClaims(c)
 
 	if err := c.ShouldBindJSON(&self.Fluid); err != nil {
-		spew.Dump("Failed to update")
-		spew.Dump(err)
 		return err
 	}
 
