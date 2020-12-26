@@ -13,6 +13,13 @@
       </v-container>
     </v-form>
 
+    <v-overlay v-if="getLoadingStatus" class="text-center">
+      <v-progress-circular
+        :size="70"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
+
     <v-list three-line>
       <template v-for="(item, index) in getOffSearch.products">
         <v-divider></v-divider>
@@ -79,11 +86,10 @@ export default {
   }),
 
   computed: {
-    ...mapGetters('off', ['getOffSearch'])
+    ...mapGetters('off', ['getOffSearch', 'getLoadingStatus'])
   },
 
   mounted() {
-    // This is not working I don't know why
     this.$store.commit('off/resetState')
   },
 
@@ -91,12 +97,15 @@ export default {
     ...mapActions('off', ['search']),
 
     searchOff() {
-      this.search({ search_terms: this.food, page: this.page })
+      this.search({
+        search_terms: encodeURIComponent(this.food),
+        page: this.page
+      })
     },
 
     next(page) {
       this.page = page
-      this.search({ search_terms: this.food, page: page })
+      this.search({ search_terms: encodeURIComponent(this.food), page: page })
     }
   }
 }
