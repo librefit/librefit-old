@@ -45,9 +45,14 @@ export const actions = {
         commit('append2Inventory', response.data)
       },
       error => {
+        console.log(error)
+        console.log(error.response)
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
@@ -59,11 +64,36 @@ export const actions = {
     axios.put('/food/inventory/' + id, payload, headers()).then(
       response => {
         commit('updateInventory', response.data)
+        commit(
+          'snackbar/showMessage',
+          { content: 'Successfully updated product', color: 'green' },
+          { root: true }
+        )
       },
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
+          { root: true }
+        )
+      }
+    )
+  },
+  deleteInventory({ commit }, payload) {
+    axios.delete('/food/inventory/' + payload, headers()).then(
+      response => {
+        commit('deleteInventory', payload)
+      },
+      error => {
+        commit(
+          'snackbar/showMessage',
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
@@ -77,7 +107,10 @@ export const actions = {
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
@@ -91,7 +124,10 @@ export const actions = {
       error => {
         commit(
           'snackbar/showMessage',
-          { content: error, color: 'red' },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red'
+          },
           { root: true }
         )
       }
@@ -110,7 +146,10 @@ export const actions = {
         error => {
           commit(
             'snackbar/showMessage',
-            { content: error, color: 'red' },
+            {
+              content: error + ': ' + JSON.stringify(error.response.data),
+              color: 'red'
+            },
             { root: true }
           )
         }
@@ -134,6 +173,13 @@ export const mutations = {
     const index = state.inventory.findIndex(x => x.id == payload.id)
     state.inventory.splice(index, 1, payload)
     $nuxt._router.push('/food/inventory/' + payload.id)
+  },
+  deleteInventory: (state, payload) => {
+    const index = state.inventory.findIndex(x => x.id == payload.id)
+    if (index > -1) {
+      state.inventory.splice(index, 1)
+    }
+    $nuxt._router.push('/food/inventory/')
   },
   updateInventoryItem: (state, payload) => {
     const elementPos = state.inventory
