@@ -1,8 +1,6 @@
 package database
 
 import (
-	"errors"
-
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -17,40 +15,16 @@ type User struct {
 	FoodDiaries   []FoodDiary
 	FoodInventory []FoodInventory
 	Measurement   []Measurement
+	Upload        []Upload
 }
 
-// CreateAdmin creates the initial user if doesn't exist.
-func createAdmin() error {
-	user := User{
-		Username: "admin",
-		IsAdmin:  true,
-		UserSetting: UserSetting{
-			Language:  "en",
-			UseMetric: true,
-		},
-	}
-
-	err := user.setPassword("123456")
-	if err != nil {
-		return err
-	}
-
-	err = DB.FirstOrCreate(&user, 1).Error
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (u *User) setPassword(password string) error {
-	if len(password) == 0 {
-		return errors.New("password should not be empty!")
-	}
+func PasswordHash(password string) (string, error) {
 	bytePassword := []byte(password)
-	passwordHash, _ := bcrypt.GenerateFromPassword(bytePassword, bcrypt.DefaultCost)
-	u.Password = string(passwordHash)
-	return nil
+	passwordHash, err := bcrypt.GenerateFromPassword(bytePassword, bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(passwordHash), nil
 }
 
 // FindOneUser search in the users table for a user.

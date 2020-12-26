@@ -1,6 +1,8 @@
 package database
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -12,17 +14,18 @@ type UserSetting struct {
 	Theme         string
 	FullName      string
 	Email         string
-	Birthday      string
+	Birthday      time.Time
 	UseMetric     bool
 	Sex           string
 	Height        float32
 	BodyFat       string
 	ActivityLevel string
+	UserID        uint
 }
 
 // FindOneUser search in the users table for a user.
-func FindOneSetting(condition interface{}) (UserSetting, error) {
+func FindOneSetting(UserID int) (UserSetting, error) {
 	var u UserSetting
-	err := DB.Where(condition).First(&u).Error
+	err := DB.Find(&u, "user_id = ?", UserID).Error
 	return u, err
 }
