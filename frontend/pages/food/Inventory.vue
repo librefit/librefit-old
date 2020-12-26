@@ -4,7 +4,7 @@
       Food Inventory
     </p>
     <v-bottom-navigation>
-      <v-btn to="inventory/create">
+      <v-btn to="/food/inventory/create">
         <span>Create</span>
         <v-icon>mdi-plus-circle</v-icon>
       </v-btn>
@@ -29,29 +29,21 @@
               <v-list-item-title v-html="item.product_name"></v-list-item-title>
               <v-list-item-subtitle>
                 <div>
-                  {{ item }}
+                  <b>Calories</b>: {{ item.calories }} - <b>Carbs:</b> {{ item.carbs }} - <b>Fat:</b> {{ item.fat_total }}
                 </div>
               </v-list-item-subtitle>
               <v-spacer></v-spacer>
             </v-list-item-content>
 
-            <v-btn class="ma-2" :to="'inventory/' + item.id">
+            <v-btn class="ma-2" :to="'/food/log/' + item.id">
+              Log to Diary
+            </v-btn>
+            <v-btn class="ma-2" :to="'/food/inventory/' + item.id">
               Edit
             </v-btn>
           </v-list-item>
         </template>
       </v-list>
-      <!-- <div class="text-center"> -->
-      <!--   <v-pagination -->
-      <!--     v-model="page" -->
-      <!--     v-if="getAllInventory" -->
-      <!--     :length="Math.ceil(getAllInventory.count / getAllInventory.page_size)" -->
-      <!--     :total-visible="7" -->
-      <!--     class="my-4" -->
-      <!--     @input="next" -->
-      <!--     circle -->
-      <!--   ></v-pagination> -->
-      <!-- </div> -->
       <div class="py-3" />
     </v-card>
   </div>
