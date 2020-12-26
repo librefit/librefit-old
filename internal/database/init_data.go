@@ -1,5 +1,10 @@
 package database
 
+import (
+	"os"
+	"time"
+)
+
 type MealType struct {
 	ID          string
 	Name        string
@@ -13,30 +18,41 @@ type QuantityUnit struct {
 }
 
 func InitData() error {
-	err := createAdmin()
+	// Admin/First user
+	password, err := PasswordHash("123456")
 	if err != nil {
 		return err
 	}
 
-	err = initMealType()
+	user := User{
+		Username: "admin",
+		IsAdmin:  true,
+		Password: password,
+		UserSetting: UserSetting{
+			Language:  "en",
+			UseMetric: true,
+			Birthday:  time.Date(1989, 01, 01, 22, 51, 48, 324359102, time.UTC),
+		},
+	}
+
+	err = DB.FirstOrCreate(&user, 1).Error
 	if err != nil {
 		return err
 	}
 
-	err = initQuantityUnit()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func initMealType() error {
+	// Food related
 	m := []MealType{
 		{ID: "B", Name: "Breakfast"},
 		{ID: "L", Name: "Lunch"},
 		{ID: "D", Name: "Dinner"},
 		{ID: "S", Name: "Snacks"},
+	}
+
+	q := []QuantityUnit{
+		{ID: 1, Name: "100 gr"},
+		{ID: 2, Name: "1 g"},
+		{ID: 3, Name: "3.5 ounce"},
+		{ID: 4, Name: "1 ounce"},
 	}
 
 	for _, mt := range m {
@@ -46,22 +62,17 @@ func initMealType() error {
 		}
 	}
 
-	return nil
-}
-
-func initQuantityUnit() error {
-	q := []QuantityUnit{
-		{ID: 1, Name: "100 gr"},
-		{ID: 2, Name: "1 g"},
-		{ID: 3, Name: "3.5 ounce"},
-		{ID: 4, Name: "1 ounce"},
-	}
-
 	for _, qu := range q {
 		err := DB.Where(QuantityUnit{ID: qu.ID}).FirstOrCreate(&qu).Error
 		if err != nil {
 			return err
 		}
+	}
+
+	// Create the directory for uploads
+	path := "./data/img"
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.Mkdir(path, 0700)
 	}
 
 	return nil
