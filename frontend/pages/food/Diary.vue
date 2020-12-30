@@ -1,8 +1,6 @@
 <template>
   <div>
-    <p class="text-center text-h4">
-      Food Diary
-    </p>
+    <p class="text-center text-h4">Food Diary</p>
 
     <v-card class="mt-4 mb-4">
       <v-card-text class="text-center">
@@ -46,6 +44,7 @@
         <v-data-table
           :headers="headers"
           :items="getFoodDiary('B')"
+          v-if="getFoodDiary('B').length"
           class="elevation-1"
           disable-pagination
           :hide-default-footer="true"
@@ -55,7 +54,14 @@
               item.calories
             }}</v-chip>
           </template>
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2"> mdi-pencil </v-icon>
+            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          </template>
         </v-data-table>
+        <p v-else class="text-center font-italic">
+          You don't have anything logged for Breakfast
+        </p>
 
         <div class="py-3" />
 
@@ -63,6 +69,7 @@
 
         <v-data-table
           :headers="headers"
+          v-if="getFoodDiary('L').length"
           :items="getFoodDiary('L')"
           class="elevation-1"
           disable-pagination
@@ -73,7 +80,14 @@
               item.calories
             }}</v-chip>
           </template>
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2"> mdi-pencil </v-icon>
+            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          </template>
         </v-data-table>
+        <p v-else class="text-center font-italic">
+          You don't have anything logged for Lunch
+        </p>
 
         <div class="py-3" />
 
@@ -81,6 +95,7 @@
         <v-data-table
           :headers="headers"
           :items="getFoodDiary('D')"
+          v-if="getFoodDiary('D').length"
           class="elevation-1"
           disable-pagination
           :hide-default-footer="true"
@@ -90,13 +105,23 @@
               item.calories
             }}</v-chip>
           </template>
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">
+              mdi-pencil
+            </v-icon>
+            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          </template>
         </v-data-table>
+        <p v-else class="text-center font-italic">
+          You don't have anything logged for Dinner
+        </p>
 
         <div class="py-3" />
 
         <p>Snacks</p>
         <v-data-table
           :headers="headers"
+          v-if="getFoodDiary('S').length"
           :items="getFoodDiary('S')"
           class="elevation-1"
           disable-pagination
@@ -112,18 +137,18 @@
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item)">
-              mdi-delete
-            </v-icon>
+            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
-
         </v-data-table>
+        <p v-else class="text-center font-italic">
+          You don't have anything logged for Snacks
+        </p>
 
         <div class="py-3" />
 
         <v-fab-transition>
           <v-btn
-            to="/food/inventory/search"
+            to="/food/inventory"
             color="pink"
             dark
             absolute
@@ -152,7 +177,7 @@ export default {
         text: 'Meal (100g serving)',
         align: 'start',
         sortable: false,
-        value: 'product_name'
+        value: 'product_name',
       },
       { text: 'Calories (kcal)', value: 'calories' },
       { text: 'Carbs (g)', value: 'carbs' },
@@ -160,33 +185,36 @@ export default {
       { text: 'Protein (g)', value: 'proteins' },
       { text: 'Sodium (g)', value: 'sodium' },
       { text: 'Sugars', value: 'sugars' },
-      { text: 'Actions', value: 'actions', sortable: false }
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
   }),
-  
+
   mounted() {
     this.$store.dispatch('food/foodDiary', { start: this.date, end: this.date })
   },
 
   computed: {
-    ...mapGetters('food', [
-      'getFoodDiary',
-    ]),
-    
+    ...mapGetters('food', ['getFoodDiary']),
+
     dateText() {
       return this.date
-    }
+    },
   },
 
   watch: {
-    date: function(val) {
+    date: function (val) {
       const d = new Date(val).toISOString().slice(0, 10)
       this.foodDiary({ start: d, end: d })
-    }
+    },
   },
 
   methods: {
-    ...mapActions('food', ['foodDiary']),
+    ...mapActions('food', ['foodDiary', 'deleteDiary']),
+
+    deleteItem(item) {
+      confirm('Are you sure you want to delete this entry?') &&
+        this.deleteDiary(item.id)
+    },
 
     moveDate(direction) {
       var d = new Date(this.date)
@@ -198,7 +226,7 @@ export default {
       if (calories > 400) return 'red'
       else if (calories > 200) return 'orange'
       else return 'green'
-    }
-  }
+    },
+  },
 }
 </script>
