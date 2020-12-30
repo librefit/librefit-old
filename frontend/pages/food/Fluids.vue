@@ -1,8 +1,6 @@
 <template>
   <div>
-    <p class="text-center text-h4">
-      Fluids intake log
-    </p>
+    <p class="text-center text-h4">Fluids intake log</p>
 
     <v-card>
       <v-card-title>
@@ -92,8 +90,15 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
+                          type="number"
                           v-model="editedItem.value"
-                          :rules="[rules.positive, rules.required]"
+                          :rules="[
+                            rules.positive,
+                            rules.required,
+                            (value) =>
+                              /^\d+$/.test(value) ||
+                              'This field only accept numbers',
+                          ]"
                           label="Amount (ml)"
                         ></v-text-field>
                       </v-col>
@@ -117,9 +122,7 @@
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
+          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
       </v-data-table>
     </v-card>
@@ -132,12 +135,12 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   data: () => ({
     rules: {
-      positive: value => value > 0 || 'Must be more than 0',
-      required: value => !!value || 'Required.'
+      positive: (value) => value > 0 || 'Must be more than 0',
+      required: (value) => !!value || 'Required.',
     },
     rangeDates: [
       new Date().toISOString().substr(0, 10),
-      new Date().toISOString().substr(0, 10)
+      new Date().toISOString().substr(0, 10),
     ],
     dateRangeMenu: false,
     menuCalendar: false,
@@ -147,23 +150,23 @@ export default {
         text: 'water',
         align: 'start',
         sortable: false,
-        value: 'type'
+        value: 'type',
       },
       { text: 'Date', value: 'date' },
       { text: 'Amount (ml)', value: 'value' },
-      { text: 'Actions', value: 'actions', sortable: false }
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
     editedIndex: -1,
     editedItem: {
       type: 'water',
       date: new Date(),
-      value: null
+      value: null,
     },
     defaultItem: {
       type: 'water',
       date: new Date(),
-      value: null
-    }
+      value: null,
+    },
   }),
 
   mounted() {
@@ -177,13 +180,13 @@ export default {
     dateRangeText() {
       return this.rangeDates.join(' ~ ')
     },
-    ...mapGetters('fluids', ['getAllFluids'])
+    ...mapGetters('fluids', ['getAllFluids']),
   },
 
   watch: {
     dialog(val) {
       val || this.close()
-    }
+    },
   },
 
   methods: {
@@ -191,7 +194,7 @@ export default {
       'addFluid',
       'deleteFluid',
       'updateFluid',
-      'getFluidsByRange'
+      'getFluidsByRange',
     ]),
 
     filterByDates() {
@@ -217,7 +220,7 @@ export default {
       const payload = {
         type: 'water',
         date: new Date(),
-        value: amount
+        value: amount,
       }
       this.addFluid(payload)
     },
@@ -237,7 +240,7 @@ export default {
         this.addFluid(this.editedItem)
       }
       this.close()
-    }
-  }
+    },
+  },
 }
 </script>
