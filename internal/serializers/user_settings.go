@@ -19,6 +19,7 @@ type UserSettingRes struct {
 	Sex           string  `json:"sex"`
 	Height        float32 `json:"height"`
 	BodyFat       string  `json:"body_fat"`
+	Avatar        string  `json:"avatar"`
 	ActivityLevel string  `json:"activity_level"`
 }
 
@@ -36,6 +37,7 @@ func UserSettingResponse(s *db.UserSetting) UserSettingRes {
 		Sex:           s.Sex,
 		Height:        s.Height,
 		BodyFat:       s.BodyFat,
+		Avatar:        s.Avatar,
 		ActivityLevel: s.ActivityLevel,
 	}
 }

@@ -24,6 +24,7 @@ type UserSettingValidator struct {
 		Height        float32 `json:"height"`
 		BodyFat       string  `json:"body_fat"`
 		ActivityLevel string  `json:"activity_level"`
+		Avatar        string  `json:"avatar"`
 	} `json:"user_settings"`
 	UserSettingDb db.UserSetting `json:"-"`
 }
@@ -32,6 +33,7 @@ func NewUserSettingsValidatorFillWith(u db.UserSetting) UserSettingValidator {
 	usv := NewUserSettingsValidator()
 
 	usv.UserSetting.Country = u.Country
+	usv.UserSetting.Avatar = u.Avatar
 	usv.UserSetting.Timezone = u.Timezone
 	usv.UserSetting.Language = u.Language
 	usv.UserSetting.Theme = u.Theme
@@ -62,6 +64,7 @@ func (self *UserSettingValidator) Bind(c *gin.Context) error {
 	self.UserSettingDb.Country = self.UserSetting.Country
 	self.UserSettingDb.Timezone = self.UserSetting.Timezone
 	self.UserSettingDb.Language = self.UserSetting.Language
+	self.UserSettingDb.Avatar = self.UserSetting.Avatar
 	self.UserSettingDb.Theme = self.UserSetting.Theme
 	self.UserSettingDb.FullName = self.UserSetting.FullName
 	self.UserSettingDb.Email = self.UserSetting.Email
@@ -77,6 +80,5 @@ func (self *UserSettingValidator) Bind(c *gin.Context) error {
 }
 
 func NewUserSettingsValidator() UserSettingValidator {
-	usv := UserSettingValidator{}
-	return usv
+	return UserSettingValidator{}
 }

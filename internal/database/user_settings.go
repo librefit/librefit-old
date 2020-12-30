@@ -10,6 +10,7 @@ type UserSetting struct {
 	gorm.Model
 	Country       string // Used for searching in OpenFoodFacts
 	Timezone      string
+	Avatar        string
 	Language      string
 	Theme         string
 	FullName      string

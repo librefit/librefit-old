@@ -5,30 +5,36 @@ export const state = () => ({
   settings: [],
   username: null,
   password: null,
-  loadingStatus: false
+  loadingStatus: false,
 })
 
 export const getters = {
-  getSettings: state => {
+  getHeight: (state) => {
+    return state.settings?.user_settings?.height
+  },
+  getSettings: (state) => {
     return state.settings
   },
-  getLoadingStatus: state => {
+  getAvatarURL: (state) => {
+    return process.env.baseUrlImg + state.settings?.user_settings?.avatar
+  },
+  getLoadingStatus: (state) => {
     return state.loadingStatus
-  }
+  },
 }
 
 export const actions = {
   pullSettings({ commit }) {
     axios.get('/user/info', headers()).then(
-      response => {
+      (response) => {
         commit('setSettings', response.data)
       },
-      error => {
+      (error) => {
         commit(
           'snackbar/showMessage',
           {
             content: error + ': ' + JSON.stringify(error.response.data),
-            color: 'red'
+            color: 'red',
           },
           { root: true }
         )
@@ -37,7 +43,7 @@ export const actions = {
   },
   update({ commit, state }, payload) {
     axios.put('/user/info', payload, headers()).then(
-      response => {
+      (response) => {
         commit(
           'snackbar/showMessage',
           { content: 'Successfully updated', color: 'green' },
@@ -45,41 +51,79 @@ export const actions = {
         )
         $nuxt._router.push('/login')
       },
-      error => {
+      (error) => {
         commit(
           'snackbar/showMessage',
           {
             content: error + ': ' + JSON.stringify(error.response.data),
-            color: 'red'
+            color: 'red',
           },
           { root: true }
         )
       }
     )
   },
-  updatePreferences({ commit, state }, payload) {
-    axios
-      .put('/user/preferences', payload, headers())
-      .then(
-        response => {
-          commit(
-            'snackbar/showMessage',
-            { content: 'Successfully updated preferences', color: 'green' },
-            { root: true }
-          )
-        },
-        error => {
-          commit(
-            'snackbar/showMessage',
-            {
-              content: error + ': ' + JSON.stringify(error.response.data),
-              color: 'red'
-            },
-            { root: true }
-          )
-        }
-      )
-  }
+  async uploadAvatar({ commit, state }, payload) {
+    const formData = new FormData()
+    formData.append('file', payload)
+
+    return axios.post('/upload', formData, headers()).then(
+      (response) => {
+        commit('setFormInput', {
+          field: 'avatar',
+          value: response.data.id,
+        })
+      },
+      (error) => {
+        commit(
+          'snackbar/showMessage',
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red',
+          },
+          { root: true }
+        )
+      }
+    )
+  },
+  async updatePreferences({ dispatch, commit, state }, avatar) {
+    commit('loadingStatus', true)
+
+    if (avatar.name) {
+      await dispatch('uploadAvatar', avatar)
+    }
+
+    const payload = {
+      full_name: state.settings.user_settings.full_name,
+      email: state.settings.user_settings.email,
+      birthday: state.settings.user_settings.birthday,
+      use_metric: state.settings.user_settings.use_metric,
+      height: state.settings.user_settings.height,
+      sex: state.settings.user_settings.sex,
+      avatar: state.settings.user_settings.avatar,
+    }
+
+    axios.put('/user/preferences', payload, headers()).then(
+      (response) => {
+        commit('loadingStatus', false)
+        commit(
+          'snackbar/showMessage',
+          { content: 'Successfully updated preferences', color: 'green' },
+          { root: true }
+        )
+      },
+      (error) => {
+        commit(
+          'snackbar/showMessage',
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red',
+          },
+          { root: true }
+        )
+      }
+    )
+  },
 }
 
 export const mutations = {
@@ -97,5 +141,5 @@ export const mutations = {
   },
   loadingStatus(state, value) {
     state.loadingStatus = value
-  }
+  },
 }

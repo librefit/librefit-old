@@ -11,9 +11,14 @@
       <v-menu offset-y>
         <template v-slot:activator="{ attrs, on }">
           <v-btn icon v-bind="attrs" v-on="on">
-            <v-avatar>
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-            </v-avatar>
+            <div v-if="LoggedIn">
+              <v-avatar v-if="Avatar" color="primary">
+                <img :src="'http://localhost:4000/img/' + Avatar" />
+              </v-avatar>
+              <v-avatar v-else>
+                {{ NameAvatar }}
+              </v-avatar>
+            </div>
           </v-btn>
         </template>
 
@@ -21,7 +26,7 @@
           <v-list-item to="/user/settings" link>
             <v-list-item-title> Settings </v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item href="https://github.com/librefit/librefit" target="_blank">
             <v-list-item-title> About LibreFit </v-list-item-title>
           </v-list-item>
           <v-list-item @click="logOut" link>
@@ -88,59 +93,76 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
-  data() {
-    return {
-      drawer: false,
-      items: ['Profile', 'Sign Out'],
-      genericMenu: [
-        { icon: 'mdi-view-dashboard', text: 'Personal Dashboard', route: '/' },
-        {
-          icon: 'mdi-silverware',
-          text: 'Food',
-          route: '/food',
-          submenu: [
-            {
-              icon: 'mdi-calendar-today',
-              text: 'Meal Diary',
-              route: '/food/diary'
-            },
-            {
-              icon: 'mdi-cup-water',
-              text: 'Water Intake',
-              route: '/food/fluids'
-            },
-            {
-              icon: 'mdi-archive',
-              text: 'Inventory',
-              route: '/food/inventory'
-            }
-          ]
-        },
-        {
-          icon: 'mdi-weight-kilogram',
-          text: 'Weight Tracking',
-          route: '/measures'
-        },
-        {
-          icon: 'mdi-calendar',
-          text: 'Calendar',
-          route: '/calendar'
-        },
-        {
-          icon: 'mdi-run-fast',
-          text: 'Activities (soon!)',
-          route: '/comingsoon'
-        }
-      ]
-    }
+  data: () => ({
+    drawer: false,
+    items: ['Profile', 'Sign Out'],
+    genericMenu: [
+      { icon: 'mdi-view-dashboard', text: 'Personal Dashboard', route: '/' },
+      {
+        icon: 'mdi-silverware',
+        text: 'Food',
+        route: '/food',
+        submenu: [
+          {
+            icon: 'mdi-calendar-today',
+            text: 'Meal Diary',
+            route: '/food/diary',
+          },
+          {
+            icon: 'mdi-cup-water',
+            text: 'Water Intake',
+            route: '/food/fluids',
+          },
+          {
+            icon: 'mdi-archive',
+            text: 'Inventory',
+            route: '/food/inventory',
+          },
+        ],
+      },
+      {
+        icon: 'mdi-weight-kilogram',
+        text: 'Weight Tracking',
+        route: '/measures',
+      },
+      {
+        icon: 'mdi-calendar',
+        text: 'Calendar',
+        route: '/calendar',
+      },
+      {
+        icon: 'mdi-run-fast',
+        text: 'Activities (soon!)',
+        route: '/comingsoon',
+      },
+    ],
+  }),
+
+  computed: {
+    LoggedIn() {
+      return this.$store.state.auth.loggedIn
+    },
+
+    Avatar() {
+      if (this.$store.state.auth.user.user_settings.avatar) {
+        return this.$store.state.auth.user.user_settings.avatar
+      }
+    },
+
+    NameAvatar() {
+      return this.$store.state.auth.user.username.charAt(0)
+    },
   },
+
   methods: {
     logOut() {
       this.$auth.logout()
       this.$router.push('/login')
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -34,6 +34,7 @@ func UserResponse(u *db.User) UserRes {
 			Sex:           u.UserSetting.Sex,
 			Height:        u.UserSetting.Height,
 			BodyFat:       u.UserSetting.BodyFat,
+			Avatar:        u.UserSetting.Avatar,
 			ActivityLevel: u.UserSetting.ActivityLevel,
 		},
 	}

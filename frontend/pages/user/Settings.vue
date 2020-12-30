@@ -34,9 +34,9 @@
                   prepend-icon="mdi-lock"
                   type="password"
                   :rules="[
-                    value => !!value || 'Please type password.',
-                    value =>
-                      (value && value.length >= 6) || 'minimum 6 characters'
+                    (value) => !!value || 'Please type password.',
+                    (value) =>
+                      (value && value.length >= 6) || 'minimum 6 characters',
                   ]"
                   label="Password"
                 ></v-text-field>
@@ -50,7 +50,7 @@
                   :rules="[
                     !!confirmPassword || 'type confirm password',
                     password === confirmPassword ||
-                      'The password confirmation does not match.'
+                      'The password confirmation does not match.',
                   ]"
                 />
 
@@ -67,9 +67,12 @@
       <v-tab-item>
         <v-container fluid>
           <v-form>
-          <v-overlay v-if="getLoadingStatus" class="text-center">
-            <v-progress-circular :size="70" indeterminate></v-progress-circular>
-          </v-overlay>
+            <v-overlay v-if="getLoadingStatus" class="text-center">
+              <v-progress-circular
+                :size="70"
+                indeterminate
+              ></v-progress-circular>
+            </v-overlay>
 
             <base-material-card>
               <template v-slot:heading>User Profile</template>
@@ -166,7 +169,7 @@ export default {
     // Username & Password
     currentPassword: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   }),
 
   mounted() {
@@ -185,9 +188,9 @@ export default {
       set(val) {
         this.$store.commit('user/update', {
           value: val,
-          element: 'username'
+          element: 'username',
         })
-      }
+      },
     },
     full_name: {
       get() {
@@ -198,9 +201,9 @@ export default {
       set(value) {
         this.$store.commit('user/setFormInput', {
           field: 'full_name',
-          value: value
+          value: value,
         })
-      }
+      },
     },
     email: {
       get() {
@@ -211,9 +214,9 @@ export default {
       set(value) {
         this.$store.commit('user/setFormInput', {
           field: 'email',
-          value: value
+          value: value,
         })
-      }
+      },
     },
     dob: {
       get() {
@@ -224,9 +227,9 @@ export default {
       set(value) {
         this.$store.commit('user/setFormInput', {
           field: 'birthday',
-          value: value
+          value: value,
         })
-      }
+      },
     },
     useMetrics: {
       get() {
@@ -238,9 +241,9 @@ export default {
       set(value) {
         this.$store.commit('user/setFormInput', {
           field: 'use_metric',
-          value: value
+          value: value,
         })
-      }
+      },
     },
     sex: {
       get() {
@@ -251,9 +254,9 @@ export default {
       set(value) {
         this.$store.commit('user/setFormInput', {
           field: 'sex',
-          value: value
+          value: value,
         })
-      }
+      },
     },
     height: {
       get() {
@@ -264,9 +267,9 @@ export default {
       set(value) {
         this.$store.commit('user/setFormInput', {
           field: 'height',
-          value: value
+          value: value,
         })
-      }
+      },
     },
     emailErrors() {
       const errors = []
@@ -274,34 +277,26 @@ export default {
       !this.$v.email.email && errors.push('Must be valid e-mail')
       !this.$v.email.required && errors.push('E-mail is required')
       return errors
-    }
+    },
   },
 
   methods: {
-    ...mapActions('user', ['updatePreferences', 'update']),
+    ...mapActions('user', ['updatePreferences', 'uploadAvatar', 'update']),
 
     save() {
-      console.log(this.avatar)
-      // this.updatePreferences({
-      //   full_name: this.full_name,
-      //   email: this.email,
-      //   birthday: this.dob,
-      //   use_metric: this.useMetrics,
-      //   height: this.height,
-      //   sex: this.sex
-      // })
+      this.updatePreferences(this.avatar)
     },
 
     saveCredentialsTab() {
       this.update({
         username: this.username,
-        password: this.password
+        password: this.password,
       })
-    }
+    },
   },
 
   validations: {
-    email: { required, email }
-  }
+    email: { required, email },
+  },
 }
 </script>
