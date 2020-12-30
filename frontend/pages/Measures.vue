@@ -1,9 +1,7 @@
 <template>
   <div>
-    <p class="text-center mb-4 text-h4">
-      Weight tracking
-    </p>
-    
+    <p class="text-center mb-4 text-h4">Weight tracking</p>
+
     <div class="py-4" />
 
     <base-material-card>
@@ -68,6 +66,13 @@
                         <v-text-field
                           v-model="editedItem.value"
                           label="Value"
+                          type="number"
+                          :rules="[
+                            (value) => !!value || 'Please type a value.',
+                            (value) =>
+                              /^\d+$/.test(value) ||
+                              'This field only accept numbers',
+                          ]"
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -89,9 +94,7 @@
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
+          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
       </v-data-table>
     </base-material-card>
@@ -108,17 +111,17 @@ export default {
     headers: [
       { text: 'Date', value: 'date' },
       { text: 'value', value: 'value' },
-      { text: 'Actions', value: 'actions', sortable: false }
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
     editedIndex: -1,
     editedItem: {
       date: new Date().toISOString().substr(0, 10),
-      value: 0
+      value: 0,
     },
     defaultItem: {
       date: new Date().toISOString().substr(0, 10),
-      value: 0
-    }
+      value: 0,
+    },
   }),
 
   mounted() {
@@ -132,8 +135,8 @@ export default {
     ...mapGetters('measures', [
       'getAllMeasures',
       'getLineChartData',
-      'getLineChartOptions'
-    ])
+      'getLineChartOptions',
+    ]),
   },
 
   methods: {
@@ -169,7 +172,7 @@ export default {
         this.addMeasure(payload)
       }
       this.close()
-    }
-  }
+    },
+  },
 }
 </script>
