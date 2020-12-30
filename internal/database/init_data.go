@@ -29,6 +29,7 @@ func InitData() error {
 		IsAdmin:  true,
 		Password: password,
 		UserSetting: UserSetting{
+			FullName:  "Admin",
 			Language:  "en",
 			UseMetric: true,
 			Birthday:  time.Date(1989, 01, 01, 22, 51, 48, 324359102, time.UTC),
