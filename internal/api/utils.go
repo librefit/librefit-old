@@ -28,14 +28,10 @@ func fileUpload(c *gin.Context) {
 	title := c.PostForm("title")
 	caption := c.PostForm("caption")
 	size := c.PostForm("size")
-	fID, err := strconv.ParseUint(c.PostForm("food_inventory_id"), 10, 32)
-	if err != nil {
-		fmt.Println(err)
-	}
+	foodInventoryID := c.PostForm("food_inventory_id")
 
 	extension := filepath.Ext(file.Filename)
-	uuid := uuid.New().String()
-	newFileName := uuid + extension
+	newFileName := uuid.New().String() + extension
 
 	if err := c.SaveUploadedFile(file, "./data/img/"+newFileName); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -58,7 +54,11 @@ func fileUpload(c *gin.Context) {
 		return
 	}
 
-	if fID != 0 {
+	if foodInventoryID != "" {
+		fID, err := strconv.ParseUint(foodInventoryID, 10, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
 		fii := &db.FoodInventoryImg{
 			UploadID:        u.ID,
 			FoodInventoryID: uint(fID),
@@ -69,5 +69,5 @@ func fileUpload(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": uuid})
+	c.JSON(http.StatusOK, gin.H{"id": newFileName})
 }

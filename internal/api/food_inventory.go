@@ -27,6 +27,9 @@ func foodInventory(c *gin.Context) {
 }
 
 func foodInventoryCreate(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	userID := uint(claims["UserID"].(float64))
+
 	fiv := validators.NewFoodInventoryValidator()
 	if err := fiv.Bind(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,6 +37,11 @@ func foodInventoryCreate(c *gin.Context) {
 	}
 
 	if err := db.SaveOne(&fiv.FoodInventoryDb); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error (db)": err.Error()})
+		return
+	}
+
+	if err := db.StoreImages(&fiv.FoodInventory.Images, userID, &fiv.FoodInventoryDb.ID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error (db)": err.Error()})
 		return
 	}

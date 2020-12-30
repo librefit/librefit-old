@@ -1,8 +1,14 @@
 package database
 
 import (
-	"github.com/davecgh/go-spew/spew"
-	openfoodfacts "github.com/mogaal/openfoodfacts-go"
+	"io"
+	"net/http"
+	"os"
+	"path"
+	"path/filepath"
+
+	"github.com/google/uuid"
+
 	"gorm.io/gorm"
 )
 
@@ -37,7 +43,62 @@ type FoodInventoryImg struct {
 	UploadID        uint
 	FoodInventoryID uint
 	Upload          Upload
-	FoodInventory   FoodInventory
+}
+
+// StoreImages build the mapping table between images and uploads
+func StoreImages(urls *[]string, userID uint, FoodInventoryID *uint) error {
+	for _, u := range *urls {
+		filename, err := saveFile(u)
+		if err != nil {
+			return err
+		}
+
+		upload := &Upload{
+			RelativeDir: "./data/img/",
+			Filename:    filename,
+			UserID:      userID,
+		}
+
+		if err := DB.Create(&upload).Error; err != nil {
+			return err
+		}
+
+		inventoryImage := &FoodInventoryImg{
+			UploadID:        upload.ID,
+			FoodInventoryID: *FoodInventoryID,
+		}
+
+		if err := DB.Create(&inventoryImage).Error; err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func saveFile(u string) (string, error) {
+	filename := uuid.New().String() + filepath.Ext(path.Base(u))
+	filepath := "./data/img/" + filename
+
+	out, err := os.Create(filepath)
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+
+	resp, err := http.Get(u)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return filename, nil
 }
 
 func FindOneFoodInventory(id string) (FoodInventory, error) {
@@ -48,12 +109,13 @@ func FindOneFoodInventory(id string) (FoodInventory, error) {
 
 func DeleteFoodInventory(id string) error {
 	var f FoodInventory
-	if err := DB.Preload("FoodDiary").First(&f, "id = ?", id).Error; err != nil {
+	if err := DB.Preload("FoodInventoryImg.Upload").Preload("FoodInventoryImg").Preload("FoodDiary").First(&f, "id = ?", id).Error; err != nil {
 		return err
 	}
 
 	// In case there are Foreign keys from Food Diary table
 	if f.FoodDiary == nil {
+		DB.Unscoped().Delete(f.FoodInventoryImg)
 		return DB.Unscoped().Delete(f).Error
 	}
 
@@ -62,43 +124,6 @@ func DeleteFoodInventory(id string) error {
 
 func FindManyFoodInventory(UserID uint) ([]FoodInventory, error) {
 	var f []FoodInventory
-	err := DB.Preload("FoodInventoryImg").Find(&f, "user_id = ?", UserID).Error
-
-	spew.Dump(f)
+	err := DB.Preload("FoodInventoryImg.Upload").Preload("FoodInventoryImg").Find(&f, "user_id = ?", UserID).Error
 	return f, err
-}
-
-func FindOrCreateFoodInventory(u uint, o string) (*FoodInventory, error) {
-	var r FoodInventory
-
-	if err := DB.Where(FoodInventory{UserID: u, OffCode: o}).FirstOrCreate(&r).Error; err != nil {
-		return nil, err
-	}
-
-	api := openfoodfacts.NewClient("world", "", "")
-	product, err := api.Product(r.OffCode)
-	if err != nil {
-		return nil, err
-	}
-
-	r.ProductName = product.ProductName
-	r.Calories = float32(product.Nutriments.EnergyKcal100G)
-	r.FatTotal = float32(product.Nutriments.Fat100G)
-	r.FatSaturated = float32(product.Nutriments.SaturatedFat100G)
-	r.FatPolyunsaturated = float32(product.Nutriments.PolyunsaturatedFat100G)
-	r.FatMonounsaturated = float32(product.Nutriments.MonounsaturatedFat100G)
-	r.FatTrans = float32(product.Nutriments.TransFat100G)
-	r.FatCholesterol = float32(product.Nutriments.Cholesterol100G)
-	r.Sodium = float32(product.Nutriments.Sodium100G)
-	r.Potassium = float32(product.Nutriments.Potassium100G)
-	r.Carbs = float32(product.Nutriments.Carbohydrates100G)
-	r.Fibers = float32(product.Nutriments.Fiber100G)
-	r.Sugars = float32(product.Nutriments.Sugars100G)
-	r.Proteins = float32(product.Nutriments.Proteins100G)
-
-	if err := DB.Save(&r).Error; err != nil {
-		return nil, err
-	}
-
-	return &r, nil
 }

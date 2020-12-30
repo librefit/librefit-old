@@ -9,25 +9,27 @@ import (
 
 type FoodInventoryValidator struct {
 	FoodInventory struct {
-		OffCode            string  `json:"off_code"`
-		ProductName        string  `json:"product_name" binding:"required"`
-		Description        string  `json:"description"`
-		Favourite          bool    `json:"favourite"`
-		Calories           float32 `json:"calories"`
-		FatTotal           float32 `json:"FatTotal"`
-		FatSaturated       float32 `json:"fat_saturated"`
-		FatPolyunsaturated float32 `json:"fat_polyunsaturated"`
-		FatMonounsaturated float32 `json:"fat_monounsaturated"`
-		FatTrans           float32 `json:"fat_trans"`
-		FatCholesterol     float32 `json:"fat_cholesterol"`
-		Sodium             float32 `json:"sodium"`
-		Potassium          float32 `json:"potassium"`
-		Carbs              float32 `json:"carbs"`
-		Fibers             float32 `json:"fibers"`
-		Sugars             float32 `json:"sugars"`
-		Proteins           float32 `json:"proteins"`
+		OffCode            string   `json:"off_code"`
+		ProductName        string   `json:"product_name" binding:"required"`
+		Description        string   `json:"description"`
+		Favourite          bool     `json:"favourite"`
+		Calories           float32  `json:"calories"`
+		FatTotal           float32  `json:"FatTotal"`
+		FatSaturated       float32  `json:"fat_saturated"`
+		FatPolyunsaturated float32  `json:"fat_polyunsaturated"`
+		FatMonounsaturated float32  `json:"fat_monounsaturated"`
+		FatTrans           float32  `json:"fat_trans"`
+		FatCholesterol     float32  `json:"fat_cholesterol"`
+		Sodium             float32  `json:"sodium"`
+		Potassium          float32  `json:"potassium"`
+		Carbs              float32  `json:"carbs"`
+		Fibers             float32  `json:"fibers"`
+		Sugars             float32  `json:"sugars"`
+		Proteins           float32  `json:"proteins"`
+		Images             []string `json:"images"`
 	} `json:"food_inventory"`
-	FoodInventoryDb db.FoodInventory `json:"-"`
+	FoodInventoryDb  db.FoodInventory      `json:"-"`
+	FoodInventoryImg []db.FoodInventoryImg `json:"-"`
 }
 
 func NewFoodInventoryValidatorFillWith(f db.FoodInventory) FoodInventoryValidator {
@@ -84,6 +86,5 @@ func (self *FoodInventoryValidator) Bind(c *gin.Context) error {
 }
 
 func NewFoodInventoryValidator() FoodInventoryValidator {
-	v := FoodInventoryValidator{}
-	return v
+	return FoodInventoryValidator{}
 }

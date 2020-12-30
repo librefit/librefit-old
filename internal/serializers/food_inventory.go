@@ -5,27 +5,33 @@ import (
 )
 
 type FoodInventoryRes struct {
-	ID                 uint    `json:"id"`
-	OffCode            string  `json:"off_code"`
-	ProductName        string  `json:"product_name"`
-	Description        string  `json:"description"`
-	Favourite          bool    `json:"favourite"`
-	Calories           float32 `json:"calories"`
-	FatTotal           float32 `json:"fat_total"`
-	FatSaturated       float32 `json:"fat_saturated"`
-	FatPolyunsaturated float32 `json:"fat_polyunsaturated"`
-	FatMonounsaturated float32 `json:"fat_monounsaturated"`
-	FatTrans           float32 `json:"fat_trans"`
-	FatCholesterol     float32 `json:"fat_cholesterol"`
-	Sodium             float32 `json:"sodium"`
-	Potassium          float32 `json:"potassium"`
-	Carbs              float32 `json:"carbs"`
-	Fibers             float32 `json:"fibers"`
-	Sugars             float32 `json:"sugars"`
-	Proteins           float32 `json:"proteins"`
+	ID                 uint     `json:"id"`
+	OffCode            string   `json:"off_code"`
+	ProductName        string   `json:"product_name"`
+	Description        string   `json:"description"`
+	Favourite          bool     `json:"favourite"`
+	Calories           float32  `json:"calories"`
+	FatTotal           float32  `json:"fat_total"`
+	FatSaturated       float32  `json:"fat_saturated"`
+	FatPolyunsaturated float32  `json:"fat_polyunsaturated"`
+	FatMonounsaturated float32  `json:"fat_monounsaturated"`
+	FatTrans           float32  `json:"fat_trans"`
+	FatCholesterol     float32  `json:"fat_cholesterol"`
+	Sodium             float32  `json:"sodium"`
+	Potassium          float32  `json:"potassium"`
+	Carbs              float32  `json:"carbs"`
+	Fibers             float32  `json:"fibers"`
+	Sugars             float32  `json:"sugars"`
+	Proteins           float32  `json:"proteins"`
+	Images             []string `json:"images"`
 }
 
 func FoodInventoryResponse(f *db.FoodInventory) FoodInventoryRes {
+	var images []string
+	for _, i := range f.FoodInventoryImg {
+		images = append(images, i.Upload.Filename)
+	}
+
 	return FoodInventoryRes{
 		ID:                 f.ID,
 		OffCode:            f.OffCode,
@@ -45,6 +51,7 @@ func FoodInventoryResponse(f *db.FoodInventory) FoodInventoryRes {
 		Fibers:             f.Fibers,
 		Sugars:             f.Sugars,
 		Proteins:           f.Proteins,
+		Images:             images,
 	}
 }
 
