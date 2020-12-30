@@ -52,7 +52,8 @@ export default {
   },
 
   env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost:4000/api/v1'
+    baseUrl: process.env.BASE_URL || 'http://localhost:4000/api/v1',
+    baseUrlImg: process.env.BASE_URL_IMG || 'http://localhost:4000/img/'
   },
 
   router: {
