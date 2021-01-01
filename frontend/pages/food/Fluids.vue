@@ -2,37 +2,9 @@
   <div>
     <p class="text-center text-h4">Fluids intake log</p>
 
-    <v-card>
-      <v-card-title>
-        <v-menu
-          ref="menu"
-          v-model="dateRangeMenu"
-          :close-on-content-click="false"
-          :return-value.sync="rangeDates"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="dateRangeText"
-              label="Date Range"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="rangeDates" range>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="dateRangeMenu = false"
-              >Cancel</v-btn
-            >
-            <v-btn text color="primary" @click="filterByDates">OK</v-btn>
-          </v-date-picker>
-        </v-menu>
-      </v-card-title>
+    <DateMenu :date="date" @update-date="moveDate" @move-date="moveDate" />
 
+    <v-card>
       <v-card-title>
         <span class="mr-2">Quick add</span>
         <v-btn class="ma-2" rounded v-on:click="quickAdd('250')"
@@ -49,7 +21,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="getAllFluids"
+        :items="getFluids"
         sort-by="date"
         sort-desc
         class="elevation-1"
@@ -134,17 +106,12 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
+    date: new Date().toISOString().substr(0, 10),
+    dialog: false,
     rules: {
       positive: (value) => value > 0 || 'Must be more than 0',
       required: (value) => !!value || 'Required.',
     },
-    rangeDates: [
-      new Date().toISOString().substr(0, 10),
-      new Date().toISOString().substr(0, 10),
-    ],
-    dateRangeMenu: false,
-    menuCalendar: false,
-    dialog: false,
     headers: [
       {
         text: 'water',
@@ -170,21 +137,22 @@ export default {
   }),
 
   mounted() {
-    this.$store.dispatch('fluids/loadFluids')
+    this.$store.dispatch('fluids/getFluidsByRange', {
+      from: this.date,
+      to: this.date,
+    })
   },
 
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'Register fluid intake' : 'Edit Item'
     },
-    dateRangeText() {
-      return this.rangeDates.join(' ~ ')
-    },
-    ...mapGetters('fluids', ['getAllFluids']),
+    ...mapGetters('fluids', ['getFluids']),
   },
 
   watch: {
     dialog(val) {
+      this.editedItem.date = new Date(this.date)
       val || this.close()
     },
   },
@@ -196,12 +164,6 @@ export default {
       'updateFluid',
       'getFluidsByRange',
     ]),
-
-    filterByDates() {
-      const payload = { from: this.rangeDates[0], to: this.rangeDates[1] }
-      this.getFluidsByRange(payload)
-      this.dateRangeMenu = false
-    },
 
     editItem(item) {
       this.editedIndex = 10
@@ -217,12 +179,11 @@ export default {
     },
 
     quickAdd(amount) {
-      const payload = {
+      this.addFluid({
         type: 'water',
-        date: new Date(),
+        date: new Date(this.date).toISOString(),
         value: amount,
-      }
-      this.addFluid(payload)
+      })
     },
 
     close() {
@@ -231,6 +192,11 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+
+    moveDate(newDate) {
+      this.date = newDate
+      this.getFluidsByRange({ from: this.date, to: this.date })
     },
 
     save() {

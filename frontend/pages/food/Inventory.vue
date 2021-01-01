@@ -8,11 +8,6 @@
         <span>Create</span>
         <v-icon>mdi-plus-circle</v-icon>
       </v-btn>
-
-      <v-btn>
-        <span>Favorites</span>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
     </v-bottom-navigation>
 
     <v-card class="fill-height" fluid>
@@ -22,7 +17,7 @@
 
           <v-list-item>
             <v-list-item-avatar>
-              <v-img :src="item.image_front_url"></v-img>
+              <v-img v-if="item.images" :src="baseUrlImg + item.images[0]"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -54,7 +49,8 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
-    page: 1
+    page: 1,
+    baseUrlImg: process.env.baseUrlImg,
   }),
 
   computed: {
@@ -64,16 +60,5 @@ export default {
   mounted() {
     this.$store.dispatch('food/pullInventory')
   },
-
-  methods: {
-    // ...mapActions('food', ['getAllInventory']),
-    // searchOff() {
-    //   this.search({ search_terms: this.food, page: this.page })
-    // },
-    // next(page) {
-    //   this.page = page
-    //   this.search({ search_terms: this.food, page: page })
-    // }
-  }
 }
 </script>
