@@ -18,7 +18,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>
       </v-sheet>
-      <v-sheet height="600">
+      <v-sheet height="700">
         <v-calendar
           ref="calendar"
           v-model="focus"
