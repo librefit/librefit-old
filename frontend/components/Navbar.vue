@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <v-app-bar app clipped-left color="green">
+    <v-app-bar app clipped-left color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span class="title ml-3 mr-5"
         >Libre&nbsp;<span class="font-weight-light">Fit</span></span

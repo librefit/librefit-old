@@ -11,16 +11,16 @@
         min-width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ma-1" color="green" dark @click="moveDate('+1')">
+          <v-btn class="ma-1" color="primary" dark @click="moveDate('+1')">
             <v-icon dark center>mdi-arrow-left</v-icon>
           </v-btn>
 
-          <v-btn class="ma-1" color="green" dark @click="moveDate('-1')">
+          <v-btn class="ma-1" color="primary" dark @click="moveDate('-1')">
             <v-icon dark center>mdi-arrow-right</v-icon>
           </v-btn>
 
           <v-btn
-            color="green"
+            color="primary"
             dark
             v-bind="attrs"
             v-on="on"
