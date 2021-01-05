@@ -22,7 +22,9 @@
             }}</v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2"> mdi-pencil </v-icon>
+            <v-btn class="mr-2" text icon :to="'/food/diary/' + item.id">
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
             <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
@@ -48,7 +50,9 @@
             }}</v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2"> mdi-pencil </v-icon>
+            <v-btn class="mr-2" text icon :to="'/food/diary/' + item.id">
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
             <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
@@ -73,9 +77,9 @@
             }}</v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
+            <v-btn class="mr-2" text icon :to="'/food/diary/' + item.id">
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
             <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
@@ -101,9 +105,9 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
+            <v-btn class="mr-2" text icon :to="'/food/diary/' + item.id">
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
             <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
@@ -155,26 +159,18 @@ export default {
   }),
 
   mounted() {
-    this.$store.dispatch('food/foodDiary', { start: this.date, end: this.date })
+    this.$store.dispatch('food/foodDiaryRange', {
+      start: this.date,
+      end: this.date,
+    })
   },
 
   computed: {
     ...mapGetters('food', ['getFoodDiary']),
-
-    dateText() {
-      return this.date
-    },
-  },
-
-  watch: {
-    date: function (val) {
-      const d = new Date(val).toISOString().slice(0, 10)
-      this.foodDiary({ start: d, end: d })
-    },
   },
 
   methods: {
-    ...mapActions('food', ['foodDiary', 'deleteDiary']),
+    ...mapActions('food', ['foodDiaryRange', 'deleteDiary']),
 
     deleteItem(item) {
       confirm('Are you sure you want to delete this entry?') &&
@@ -183,7 +179,7 @@ export default {
 
     moveDate(newDate) {
       this.date = newDate
-      this.foodDiary({ start: this.date, end: this.date })
+      this.foodDiaryRange({ start: this.date, end: this.date })
     },
 
     getColor(calories) {

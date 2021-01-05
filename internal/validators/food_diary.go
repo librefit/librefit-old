@@ -2,7 +2,6 @@ package validators
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -13,12 +12,12 @@ import (
 
 type FoodDiaryValidator struct {
 	FoodDiary struct {
-		MealTypeID      string `json:"meal_type" binding:"required"`
-		Quantity        string `json:"quantity" binding:"required"`
-		QuantityUnitID  uint   `json:"quantity_unit" binding:"required"`
-		Comments        string `json:"comments"`
-		Date            string `json:"date" binding:"required"`
-		FoodInventoryID uint   `json:"food_inventory_id" binding:"required"`
+		MealTypeID      string  `json:"meal_type" binding:"required"`
+		Quantity        float32 `json:"quantity" binding:"required"`
+		QuantityUnitID  uint    `json:"quantity_unit" binding:"required"`
+		Comments        string  `json:"comments"`
+		Date            string  `json:"date" binding:"required"`
+		FoodInventoryID uint    `json:"food_inventory_id" binding:"required"`
 	} `json:"food_diary"`
 	FoodDiaryDb db.FoodDiary `json:"-"`
 }
@@ -27,7 +26,7 @@ func NewFoodDiaryValidatorFillWith(f db.FoodDiary) FoodDiaryValidator {
 	mv := NewFoodDiaryValidator()
 
 	mv.FoodDiary.MealTypeID = f.MealTypeID
-	mv.FoodDiary.Quantity = fmt.Sprintf("%f", f.Quantity)
+	mv.FoodDiary.Quantity = f.Quantity
 	mv.FoodDiary.QuantityUnitID = f.QuantityUnitID
 	mv.FoodDiary.Comments = f.Comments
 	mv.FoodDiary.Date = fmt.Sprintf("%s", f.Date)
@@ -48,13 +47,8 @@ func (self *FoodDiaryValidator) Bind(c *gin.Context) error {
 		return err
 	}
 
-	quantity, err := strconv.ParseFloat(self.FoodDiary.Quantity, 32)
-	if err != nil {
-		return err
-	}
-
 	self.FoodDiaryDb.MealTypeID = self.FoodDiary.MealTypeID
-	self.FoodDiaryDb.Quantity = float32(quantity)
+	self.FoodDiaryDb.Quantity = self.FoodDiary.Quantity
 	self.FoodDiaryDb.QuantityUnitID = self.FoodDiary.QuantityUnitID
 	self.FoodDiaryDb.FoodInventoryID = self.FoodDiary.FoodInventoryID
 	self.FoodDiaryDb.Comments = self.FoodDiary.Comments

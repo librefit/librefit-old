@@ -45,6 +45,14 @@ type ComputedConsumptionRes struct {
 }
 
 func FoodDiaryResponse(f *db.FoodDiary) FoodDiaryRes {
+	var images []string
+
+	if f.FoodInventory.FoodInventoryImg != nil {
+		for _, v := range f.FoodInventory.FoodInventoryImg {
+			images = append(images, v.Upload.Filename)
+		}
+	}
+
 	return FoodDiaryRes{
 		ID:                     f.ID,
 		MealTypeID:             f.MealTypeID,
@@ -58,6 +66,7 @@ func FoodDiaryResponse(f *db.FoodDiary) FoodDiaryRes {
 			ID:                 f.FoodInventory.ID,
 			OffCode:            f.FoodInventory.OffCode,
 			ProductName:        f.FoodInventory.ProductName,
+			Images:             images,
 			Favourite:          f.FoodInventory.Favourite,
 			Calories:           f.FoodInventory.Calories,
 			FatTotal:           f.FoodInventory.FatTotal,

@@ -20,7 +20,7 @@ type FoodDiary struct {
 
 func FindOneFoodDiary(id string) (FoodDiary, error) {
 	var f FoodDiary
-	err := DB.Preload("FoodInventory").Find(&f, id).Error
+	err := DB.Preload("FoodInventory.FoodInventoryImg.Upload").Preload("FoodInventory.FoodInventoryImg").Preload("FoodInventory").Find(&f, id).Error
 	return f, err
 }
 
@@ -34,6 +34,10 @@ func DeleteFoodDiary(id string) error {
 
 func FindManyFoodDiary(UserID uint, start time.Time, end time.Time) ([]FoodDiary, error) {
 	var f []FoodDiary
-	err := DB.Preload("FoodInventory").Where("date BETWEEN ? AND ?", start, end).Find(&f, "user_id = ?", UserID).Error
+	// Custom Preloading to get soft-deleted items. When we delete product from inventory we still want
+	// it logged in the diary
+	err := DB.Preload("FoodInventory", func(db *gorm.DB) *gorm.DB {
+		return db.Unscoped()
+	}).Where("date BETWEEN ? AND ?", start, end).Find(&f, "user_id = ?", UserID).Error
 	return f, err
 }

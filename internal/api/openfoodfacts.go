@@ -11,7 +11,7 @@ import (
 
 func offSearch(c *gin.Context) {
 	offParams := "search_simple=1&action=process&json=1"
-	country := c.DefaultQuery("country", "uk")
+	country := c.DefaultQuery("country", "world")
 
 	offUrl := fmt.Sprintf("https://%s.openfoodfacts.org", country)
 

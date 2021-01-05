@@ -1,27 +1,21 @@
 <template>
   <div>
     <v-tabs v-model="tab" background-color="transparent" color="basil" grow>
-      <v-tab>
-        Search
-      </v-tab>
-      <v-tab>
-        Product
-      </v-tab>
+      <v-tab> Search </v-tab>
+      <v-tab> Product </v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
       <v-tab-item>
         <v-card color="basil" flat>
-          <v-form>
+          <v-form @submit="searchOff" onSubmit="return false;">
             <v-container>
               <v-text-field
                 v-model="searchText"
                 label="Enter food name or brand to search in OpenFoodFacts"
                 required
               ></v-text-field>
-              <v-btn @click="searchOff">
-                Search
-              </v-btn>
+              <v-btn @click="searchOff"> Search </v-btn>
             </v-container>
           </v-form>
 
@@ -97,6 +91,30 @@
           <p class="text-center text-h5" v-if="product">
             {{ product.product_name }}
           </p>
+
+          <v-dialog
+            transition="dialog-bottom-transition"
+            max-width="600"
+            v-model="dialog"
+          >
+            <template v-slot:default="dialog">
+              <v-card>
+                <v-toolbar color="primary" dark
+                  >Product barcode is already in your inventory</v-toolbar
+                >
+                <v-card-text>
+                  <div class="text-h6 pa-12">
+                    This product barcode is already registered in your inventory
+                  </div>
+                </v-card-text>
+                <v-card-actions class="justify-end">
+                  <v-btn text :href="'/food/inventory/' + existingInInventory">Take me to the product</v-btn>
+                  <v-btn text @click="dialog.value = false">Ignore</v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-dialog>
+
           <v-row>
             <v-col>
               <v-card class="pa-2" outlined tile>
@@ -213,8 +231,7 @@
               </v-card>
             </v-col>
             <v-col align="center">
-              <NutritionFactsInventory v-if="product" :product="product">
-              </NutritionFactsInventory>
+              <NutritionFactsInventory v-if="product" :product="product" />
               <v-carousel
                 hide-delimiter-background
                 delimiter-icon="mdi-minus"
@@ -224,10 +241,14 @@
                 cycle
                 interval="4000"
               >
-                <v-carousel-item v-for="(item, i) in getProductImages" v-if="item" :key="i">
+                <v-carousel-item
+                  v-for="(item, i) in getProductImages"
+                  v-if="item"
+                  :key="i"
+                >
                   <img
                     :src="item"
-                    style="width:200px;height:auto;"
+                    style="width: 200px; height: auto"
                     alt="image-from-openfoodfacts"
                   />
                 </v-carousel-item>
@@ -249,6 +270,9 @@ export default {
     searchText: '',
     product: {},
     tab: null,
+    images: [],
+    dialog: false,
+    existingInInventory: '',
   }),
 
   mounted() {
@@ -260,8 +284,8 @@ export default {
     ...mapGetters('off', [
       'getOffSearch',
       'getLoadingStatus',
-      'getProductImages'
-    ])
+      'getProductImages',
+    ]),
   },
 
   methods: {
@@ -271,13 +295,21 @@ export default {
       this.$store.dispatch('food/add2Inventory', this.product)
     },
 
+    uploadImage() {
+      this.$store.dispatch('food/uploadImage', this.image)
+    },
+
     pullProduct(item) {
+      if (this.$store.getters['food/getInventoryByOffCode'](item)) {
+        this.existingInInventory = this.$store.getters['food/getInventoryByOffCode'](item)
+        this.dialog = true
+      }
       let unsubscribe = null
       this.$store.commit('off/resetProduct')
       this.offProduct(item)
       unsubscribe = this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'off/product') {
-          this.product = this.$store.getters['off/getProductV1']
+          this.product = this.$store.getters['off/getProduct']
           unsubscribe()
           this.tab = 1
         }
@@ -287,7 +319,7 @@ export default {
     searchOff() {
       this.search({
         search_terms: encodeURIComponent(this.searchText),
-        page: this.page
+        page: this.page,
       })
     },
 
@@ -295,9 +327,9 @@ export default {
       this.page = page
       this.search({
         search_terms: encodeURIComponent(this.searchText),
-        page: page
+        page: page,
       })
-    }
-  }
+    },
+  },
 }
 </script>

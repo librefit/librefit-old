@@ -2,33 +2,16 @@ import axios from '~/plugins/axios'
 import headers from '~/plugins/headers'
 
 export const state = () => ({
-  allFluids: [],
+  byDay: [],
 })
 
 export const getters = {
-  getAllFluids: state => {
-    return state.allFluids
+  getFluids: state => {
+    return state.byDay
   }
 }
 
 export const actions = {
-  loadFluids({ commit }) {
-    axios.get('/fluids', headers()).then(
-      response => {
-        commit('initFluids', response.data)
-      },
-      error => {
-        commit(
-          'snackbar/showMessage',
-          {
-            content: error + ': ' + JSON.stringify(error.response.data),
-            color: 'red'
-          },
-          { root: true }
-        )
-      }
-    )
-  },
   addFluid({ commit }, payload) {
     axios.post('/fluid', payload, headers()).then(
       response => {
@@ -102,20 +85,20 @@ export const actions = {
 
 export const mutations = {
   initFluids: (state, payload) => {
-    state.allFluids = payload
+    state.byDay = payload
   },
   appendFluid: (state, payload) => {
-    state.allFluids.push(payload)
+    state.byDay.push(payload)
   },
   updateFluid: (state, payload) => {
-    const index = state.allFluids.findIndex(x => x.id == payload.id)
-    state.allFluids.splice(index, 1, payload)
+    const index = state.byDay.findIndex(x => x.id == payload.id)
+    state.byDay.splice(index, 1, payload)
   },
   removeFluid: (state, payload) => {
-    const index = state.allFluids.indexOf(payload)
-    state.allFluids.splice(index, 1)
+    const index = state.byDay.indexOf(payload)
+    state.byDay.splice(index, 1)
   },
   removeAllFluids: state => {
-    state.allFluids = []
+    state.byDay = []
   }
 }

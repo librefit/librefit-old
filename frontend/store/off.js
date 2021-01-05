@@ -4,18 +4,15 @@ import headers from '~/plugins/headers'
 export const state = () => ({
   offSearch: [],
   product: {},
-  loadingStatus: false
+  loadingStatus: false,
 })
 
 export const getters = {
-  getOffSearch: state => {
+  getOffSearch: (state) => {
     return state.offSearch
   },
-  getProduct: state => {
-    return state.product
-  },
-  getProductV1: state => {
-    var r = {
+  getProduct: (state) => {
+    return {
       calories: state.product.product.nutriments['energy-kj_100g'] || null,
       sodium: state.product.product.nutriments['sodium_100g'] || null,
       potassium: state.product.product.nutriments['potassium_100g'] || null,
@@ -31,33 +28,34 @@ export const getters = {
       fat_monounsaturated:
         state.product.product.nutriments['monounsaturated-fat_100g'] || null,
       fat_trans: state.product.product.nutriments['trans-fat_100g'] || null,
-      product_name: state.product.product.product_name
+      product_name: state.product.product.product_name,
+      off_code: state.product.code,
+      images: state.product.images,
     }
-    return r
   },
-  getProductImages: state => {
+  getProductImages: (state) => {
     return state.product.images
   },
-  getLoadingStatus: state => {
+  getLoadingStatus: (state) => {
     return state.loadingStatus
-  }
+  },
 }
 
 export const actions = {
   search({ commit }, payload) {
     commit('loadingStatus', true)
     axios.get('/off/search', { params: payload }).then(
-      response => {
+      (response) => {
         commit('loadingStatus', false)
         commit('offSearch', response.data)
       },
-      error => {
+      (error) => {
         commit(
           'snackbar/showMessage',
-            {
-              content: error + ': ' + JSON.stringify(error.response.data),
-              color: 'red'
-            },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red',
+          },
           { root: true }
         )
       }
@@ -66,17 +64,17 @@ export const actions = {
   offProduct({ commit }, code) {
     commit('loadingStatus', true)
     axios.get('/off/product/' + code).then(
-      response => {
+      (response) => {
         commit('loadingStatus', false)
         commit('product', response.data)
       },
-      error => {
+      (error) => {
         commit(
           'snackbar/showMessage',
-            {
-              content: error + ': ' + JSON.stringify(error.response.data),
-              color: 'red'
-            },
+          {
+            content: error + ': ' + JSON.stringify(error.response.data),
+            color: 'red',
+          },
           { root: true }
         )
       }
@@ -84,7 +82,7 @@ export const actions = {
   },
   reset({ commit }) {
     commit('resetState')
-  }
+  },
 }
 
 export const mutations = {
@@ -92,13 +90,21 @@ export const mutations = {
     state.offSearch = payload
   },
   product: (state, payload) => {
+    var images = []
     state.product = payload
-    state.product.images = {
-      image_front_url: payload.product?.image_front_url || null,
-      image_ingredients_url: payload.product?.image_ingredients_url || null,
-      image_nutrition_url: payload.product?.image_nutrition_url || null,
-      image_url: payload.product?.image_url || null
+    if (payload.product?.image_front_url) {
+      images.push(payload.product?.image_front_url)
     }
+    if (payload.product?.image_ingredients_url) {
+      images.push(payload.product?.image_ingredients_url)
+    }
+    if (payload.product?.image_nutrition_url) {
+      images.push(payload.product?.image_nutrition_url)
+    }
+    if (payload.product?.image_url) {
+      images.push(payload.product?.image_url)
+    }
+    state.product.images = images
   },
   resetState(state) {
     state.offSearch = []
@@ -108,5 +114,5 @@ export const mutations = {
   },
   loadingStatus(state, value) {
     state.loadingStatus = value
-  }
+  },
 }

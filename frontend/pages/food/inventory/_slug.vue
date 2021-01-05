@@ -100,7 +100,7 @@
                       label="Fat Trans"
                     ></v-text-field>
                   </v-col>
-                  <v-col md="4"> 
+                  <v-col md="4">
                     <v-text-field
                       v-model="carbs"
                       label="Carbohydrates"
@@ -109,36 +109,43 @@
                 </v-row>
               </v-container>
 
-              <v-btn depressed color="primary" @click="save">
-                Update
-              </v-btn>
-              <v-btn depressed color="red" @click="remove">
-                Delete
-              </v-btn>
-              <v-btn class="ml-3">
-                <v-icon color="pink">
-                  mdi-heart
-                </v-icon>
-                Favorite
-              </v-btn>
+              <v-btn depressed color="primary" @click="save"> Update </v-btn>
+              <v-btn depressed color="red" @click="remove"> Delete </v-btn>
             </v-form>
           </v-card>
         </v-col>
         <v-col align="center">
           <NutritionFactsInventory v-if="product" :product="product">
           </NutritionFactsInventory>
-          <p v-if="offCode" class="text-subtitle-1 mt-4">
+          <p v-if="offCode" class="mt-1">
             No the right values?
             <a
               :href="
                 'https://world.openfoodfacts.org/cgi/product.pl?type=edit&code=' +
-                  offCode
+                offCode
               "
               target="_blank"
               >Edit product in Open Food Facts</a
             >
             (you must Sign-in)
           </p>
+          <v-carousel
+            hide-delimiter-background
+            delimiter-icon="mdi-minus"
+            v-if="images"
+            height="400"
+            class="mt-4"
+            cycle
+            interval="4000"
+          >
+            <v-carousel-item v-for="(item, i) in images" v-if="item" :key="i">
+              <img
+                :src="baseUrlImg + item"
+                style="width: 200px; height: auto"
+                alt="image-from-openfoodfacts"
+              />
+            </v-carousel-item>
+          </v-carousel>
         </v-col>
       </v-row>
     </v-container>
@@ -149,7 +156,9 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
-  data: () => ({}),
+  data: () => ({
+    baseUrlImg: process.env.baseUrlImg,
+  }),
 
   async asyncData({ params }) {
     const slug = params.slug
@@ -163,6 +172,9 @@ export default {
   computed: {
     product() {
       return this.$store.getters['food/getInventoryItem'](this.slug)
+    },
+    images() {
+      return this.$store.getters['food/getInventoryItemImages'](this.slug)
     },
     offCode: {
       get() {
@@ -181,9 +193,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: value,
-          element: 'product_name'
+          element: 'product_name',
         })
-      }
+      },
     },
     description: {
       get() {
@@ -195,9 +207,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: value,
-          element: 'description'
+          element: 'description',
         })
-      }
+      },
     },
     calories: {
       get() {
@@ -209,9 +221,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'calories'
+          element: 'calories',
         })
-      }
+      },
     },
     sodium: {
       get() {
@@ -223,9 +235,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'sodium'
+          element: 'sodium',
         })
-      }
+      },
     },
     potassium: {
       get() {
@@ -237,9 +249,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'potassium'
+          element: 'potassium',
         })
-      }
+      },
     },
     fibers: {
       get() {
@@ -251,9 +263,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'fibers'
+          element: 'fibers',
         })
-      }
+      },
     },
     sugars: {
       get() {
@@ -265,9 +277,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'sugars'
+          element: 'sugars',
         })
-      }
+      },
     },
     proteins: {
       get() {
@@ -279,9 +291,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'proteins'
+          element: 'proteins',
         })
-      }
+      },
     },
     fat_cholesterol: {
       get() {
@@ -293,9 +305,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'fat_cholesterol'
+          element: 'fat_cholesterol',
         })
-      }
+      },
     },
     fat_saturated: {
       get() {
@@ -307,9 +319,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'fat_saturated'
+          element: 'fat_saturated',
         })
-      }
+      },
     },
     fat_trans: {
       get() {
@@ -321,9 +333,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'fat_trans'
+          element: 'fat_trans',
         })
-      }
+      },
     },
     fat_polyunsaturated: {
       get() {
@@ -335,9 +347,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'fat_polyunsaturated'
+          element: 'fat_polyunsaturated',
         })
-      }
+      },
     },
     fat_monounsaturated: {
       get() {
@@ -349,9 +361,9 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'fat_monounsaturated'
+          element: 'fat_monounsaturated',
         })
-      }
+      },
     },
     carbs: {
       get() {
@@ -363,10 +375,10 @@ export default {
         this.$store.commit('food/updateInventoryItem', {
           id: this.product.id,
           value: Number(value),
-          element: 'carbs'
+          element: 'carbs',
         })
-      }
-    }
+      },
+    },
   },
 
   methods: {
@@ -375,10 +387,10 @@ export default {
     save() {
       this.updateInventory(this.product)
     },
-    
+
     remove() {
       this.deleteInventory(this.product.id)
-    }
-  }
+    },
+  },
 }
 </script>

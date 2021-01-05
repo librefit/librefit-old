@@ -5,12 +5,12 @@
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
-              <v-toolbar color="green" dark flat>
-                <v-toolbar-title>Login form</v-toolbar-title>
-                <v-spacer></v-spacer>
-              </v-toolbar>
-              <v-card-text>
-                <v-form>
+              <v-form @submit="userLogin" onSubmit="return false;">
+                <v-toolbar color="primary" dark flat>
+                  <v-toolbar-title>Login form</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                </v-toolbar>
+                <v-card-text>
                   <v-text-field
                     label="Login"
                     name="login"
@@ -27,12 +27,12 @@
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" @click="userLogin">Login</v-btn>
-              </v-card-actions>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" @click="userLogin">Login</v-btn>
+                </v-card-actions>
+              </v-form>
             </v-card>
           </v-col>
         </v-row>
@@ -48,15 +48,14 @@ export default {
   data: () => ({
     login: {
       username: '',
-      password: ''
-    }
+      password: '',
+    },
   }),
 
   methods: {
     async userLogin() {
       try {
         let response = await this.$auth.loginWith('local', { data: this.login })
-        //console.log(response)
         this.$router.push('/')
       } catch (err) {
         this.content =
@@ -64,10 +63,10 @@ export default {
         this.$store.commit('snackbar/showMessage', {
           store: this.$store,
           content: this.content,
-          color: 'red'
+          color: 'red',
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>

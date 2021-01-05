@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-center text-h5" v-if="product">{{ product.product_name }}</p>
+    <p class="text-center text-h5" v-if="getDiaryItem.food_inventory">{{ getDiaryItem.food_inventory.product_name }}</p>
 
     <v-overlay v-if="getLoadingStatus" class="text-center">
       <v-progress-circular :size="70" indeterminate></v-progress-circular>
@@ -81,18 +81,18 @@
           </v-card>
         </v-col>
         <v-col align="center">
-          <NutritionFactsInventory v-if="product" :product="product" />
+          <NutritionFactsInventory v-if="getDiaryItem.food_inventory" :product="getDiaryItem.food_inventory" />
           <v-carousel
             hide-delimiter-background
             delimiter-icon="mdi-minus"
-            v-if="getProductImages"
+            v-if="getDiaryItem.food_inventory && getDiaryItem.food_inventory.images"
             height="400"
             class="mt-4"
             cycle
             interval="4000"
           >
             <v-carousel-item
-              v-for="(item, i) in getProductImages"
+              v-for="(item, i) in getDiaryItem.food_inventory.images"
               v-if="item"
               :key="i"
             >
@@ -118,15 +118,12 @@ export default {
     menuCalendar: false,
     dateDiary: new Date().toISOString().substr(0, 10),
     valid: false,
-    quantity: 1.0,
-    mealSelect: null,
     meal: [
       { text: 'Breakfast', value: 'B' },
       { text: 'Lunch', value: 'L' },
       { text: 'Dinner', value: 'D' },
       { text: 'Snacks', value: 'S' },
     ],
-    unitSelect: 2,
     units: [
       { text: 'x 100 g', value: 1 },
       { text: 'x 1 g', value: 2 },
@@ -143,42 +140,68 @@ export default {
   },
 
   watch: {
-    quantity() {
-      // TODO: Transform this.amount function of unitList
-      this.total_energy = this.quantity * this.product.calories
-    },
+    //quantity() {
+    //  // TODO: Transform this.amount function of unitList
+    //  this.total_energy = this.quantity * this.product.calories
+    //},
   },
 
   mounted() {
-    this.$store.dispatch('food/pullInventory')
+    this.$store.dispatch('food/foodDiary', this.slug)
   },
 
   computed: {
-    ...mapGetters('food', ['getLoadingStatus']),
+    ...mapGetters('food', ['getLoadingStatus', 'getDiaryItem']),
 
     getProductImages() {
       return this.$store.getters['food/getInventoryItemImages'](this.slug)
     },
-
-    product() {
-      return this.$store.getters['food/getInventoryItem'](this.slug)
+    
+    mealSelect: {
+      get() {
+        return this.getDiaryItem?.meal_type
+      },
+      set(val) {
+        this.$store.commit('food/updateDiaryForm', {
+          value: val,
+          element: 'meal_type',
+        })
+      },
+    },
+    
+    unitSelect: {
+      get() {
+        return this.getDiaryItem?.quantity_unit
+      },
+      set(val) {
+        this.$store.commit('food/updateDiaryForm', {
+          value: val,
+          element: 'quantity_unit',
+        })
+      },
+    },
+    
+    quantity: {
+      get() {
+        return this.getDiaryItem?.quantity
+      },
+      set(val) {
+        this.$store.commit('food/updateDiaryForm', {
+          value: val,
+          element: 'quantity',
+        })
+      },
     },
   },
 
   methods: {
-    ...mapActions('food', ['add2Inventory', 'add2Diary']),
+    ...mapActions('food', ['updateDiary']),
 
     save() {
       if (!this.$refs.form.validate()) {
         return
       } else {
-        this.add2Diary({
-          food_inventory_id: Number(this.slug),
-          meal_type: this.mealSelect,
-          quantity: this.quantity,
-          quantity_unit: this.unitSelect,
-          date: this.dateDiary,
-        })
+        this.updateDiary()
       }
     },
   },
