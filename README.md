@@ -9,8 +9,6 @@ LibreFit is a server-based application for calorie counting, diet plans and exer
  - Privacy first: all your data in a single file (`librefit.db`), you own it and nobody is reselling it.
  - Super simple installation
 
-Official website: https://libre.fit 
-
 ## Screenshots
 
 ![librefit screenshot](./screenshots/librefit-screenshot-01.png)
