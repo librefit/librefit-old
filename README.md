@@ -14,6 +14,7 @@ Official website: https://libre.fit
 ## Screenshots
 
 ![librefit screenshot](./screenshots/librefit-screenshot-01.png)
+![librefit screenshot](./screenshots/librefit-screenshot-02.png)
 
 ## Getting Started
 
